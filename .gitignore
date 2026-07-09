@@ -1,0 +1,8 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+rules.db
+audit_log.jsonl
+data/golden_set.json
+.DS_Store
