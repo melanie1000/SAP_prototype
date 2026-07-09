@@ -14,6 +14,11 @@ def test_is_available_when_no_current_assignment():
     assert is_available(None, target_start_date="2026-08-08") is True
 
 
+def test_is_available_when_assignment_ends_exactly_on_target_date(available_rust_assignment):
+    available_rust_assignment.planned_end_date = "2026-08-08"
+    assert is_available(available_rust_assignment, target_start_date="2026-08-08") is True
+
+
 def test_has_required_skills_exact_match(available_rust_employee):
     assert has_required_skills(available_rust_employee, ["Rust"]) is True
 
@@ -67,6 +72,19 @@ def test_rank_candidates_excludes_employee_missing_skill(
     assert "skill" in results[0].reason.lower()
 
 
+def test_rank_candidates_missing_skill_reason_is_readable_not_set_repr(
+    rust_position, available_rust_employee, available_rust_assignment
+):
+    available_rust_employee.skills = []
+    results = rank_candidates(
+        [available_rust_employee],
+        {"E0001": available_rust_assignment},
+        rust_position,
+    )
+    assert results[0].reason == "missing required skill(s): Rust"
+    assert "{" not in results[0].reason
+
+
 def test_rank_candidates_orders_by_matched_skill_count_then_tenure(rust_position):
     from src.models import Employee, ProjectAssignment
 
@@ -82,3 +100,28 @@ def test_rank_candidates_orders_by_matched_skill_count_then_tenure(rust_position
     results = rank_candidates([e1, e2], {"E0001": a1, "E0002": a2}, rust_position)
     eligible = [r for r in results if r.eligible]
     assert eligible[0].employee_id == "E0002"  # higher tenure ranked first on tie
+
+
+def test_rank_candidates_orders_ineligible_by_matched_skill_count(rust_position):
+    from src.models import Employee, ProjectAssignment, OpenPosition
+
+    two_skill_position = OpenPosition(
+        position_id="P099",
+        role_title="Rust + K8s Engineer",
+        required_skills=["Rust", "Kubernetes"],
+        urgency="high",
+        target_start_date="2026-08-08",
+        headcount_needed=1,
+    )
+    partial_match = Employee(employee_id="E0001", name="A", current_title="SE", department="Eng",
+                              skills=["Rust"], project_history=[], tenure_months=10,
+                              location="Austin", travel_preference="standard")
+    no_match = Employee(employee_id="E0002", name="B", current_title="SE", department="Eng",
+                         skills=[], project_history=[], tenure_months=50,
+                         location="Austin", travel_preference="standard")
+    a1 = ProjectAssignment(employee_id="E0001", project_name="P", planned_end_date="2026-08-01", intensity_flag="standard")
+    a2 = ProjectAssignment(employee_id="E0002", project_name="P", planned_end_date="2026-08-01", intensity_flag="standard")
+
+    results = rank_candidates([no_match, partial_match], {"E0001": a1, "E0002": a2}, two_skill_position)
+    assert all(r.eligible is False for r in results)
+    assert results[0].employee_id == "E0001"  # 1/2 matched skills ranks above 0/2, despite lower tenure

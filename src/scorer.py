@@ -34,7 +34,8 @@ def rank_candidates(
         matched = [s for s in position.required_skills if s in emp.skills]
 
         if not skills_ok:
-            reason = f"missing required skill(s): {set(position.required_skills) - set(emp.skills)}"
+            missing = sorted(set(position.required_skills) - set(emp.skills))
+            reason = f"missing required skill(s): {', '.join(missing)}"
         elif not available:
             reason = f"not available until {assignment.planned_end_date}, needed by {position.target_start_date}"
         else:
