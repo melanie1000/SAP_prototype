@@ -1,0 +1,33 @@
+[
+  {
+    "position_id": "P001",
+    "role_title": "Rust Systems Engineer \u2014 Project Falcon (Critical Redeployment)",
+    "required_skills": [
+      "Rust"
+    ],
+    "urgency": "high",
+    "target_start_date": "2026-08-08",
+    "headcount_needed": 10
+  },
+  {
+    "position_id": "P002",
+    "role_title": "Platform SRE \u2014 Project Vega",
+    "required_skills": [
+      "Kubernetes",
+      "Terraform"
+    ],
+    "urgency": "medium",
+    "target_start_date": "2026-08-23",
+    "headcount_needed": 3
+  },
+  {
+    "position_id": "P003",
+    "role_title": "Data Analyst \u2014 Project Atlas",
+    "required_skills": [
+      "SQL"
+    ],
+    "urgency": "low",
+    "target_start_date": "2026-09-22",
+    "headcount_needed": 2
+  }
+]

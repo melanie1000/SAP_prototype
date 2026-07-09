@@ -1,0 +1,2248 @@
+[
+  {
+    "employee_id": "E0001",
+    "name": "Jordan Silva",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 93,
+    "location": "Austin",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0002",
+    "name": "Sam Fontaine",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 47,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0003",
+    "name": "Taylor Okafor",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 25,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0004",
+    "name": "Morgan Andersen",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 81,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0005",
+    "name": "Casey Mbeki",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 16,
+    "location": "Austin",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0006",
+    "name": "Riley Novak",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 41,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0007",
+    "name": "Jamie Haddad",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 83,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0008",
+    "name": "Drew Sorensen",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 81,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0009",
+    "name": "Cameron Reyes",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 87,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0010",
+    "name": "Reese Kim",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 12,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0011",
+    "name": "Quinn Iqbal",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 55,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0012",
+    "name": "Avery Patel",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 55,
+    "location": "Austin",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0013",
+    "name": "Skyler Petrova",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 24,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0014",
+    "name": "Rowan Dubois",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 89,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0015",
+    "name": "Emerson Kowalski",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-10-12",
+        "end_date": "2026-04-10"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 70,
+    "location": "Toronto",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0016",
+    "name": "Blake Osei",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-08-13",
+        "end_date": "2026-02-09"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 60,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0017",
+    "name": "Hayden Yamamoto",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-08-13",
+        "end_date": "2026-02-09"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 82,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0018",
+    "name": "Parker Nakamura",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-08-13",
+        "end_date": "2026-02-09"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 92,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0019",
+    "name": "Dakota Larsen",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-08-13",
+        "end_date": "2026-02-09"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 58,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0020",
+    "name": "Alex Chen",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-08-13",
+        "end_date": "2026-02-09"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 36,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0021",
+    "name": "Jordan Silva",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-09-12",
+        "end_date": "2026-03-11"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 20,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0022",
+    "name": "Sam Fontaine",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust programming"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-09-12",
+        "end_date": "2026-03-11"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 96,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0023",
+    "name": "Taylor Okafor",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "RUST"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-09-12",
+        "end_date": "2026-03-11"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 49,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0024",
+    "name": "Morgan Andersen",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-09-12",
+        "end_date": "2026-03-11"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 41,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0025",
+    "name": "Casey Mbeki",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust programming"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Falcon",
+        "role": "Engineer",
+        "start_date": "2025-09-12",
+        "end_date": "2026-03-11"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 60,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0026",
+    "name": "Riley Novak",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Kestrel",
+        "role": "Engineer",
+        "start_date": "2024-03-21",
+        "end_date": "2024-09-17"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 82,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0027",
+    "name": "Jamie Haddad",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Kestrel",
+        "role": "Engineer",
+        "start_date": "2024-03-21",
+        "end_date": "2024-09-17"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 70,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0028",
+    "name": "Drew Sorensen",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Kestrel",
+        "role": "Engineer",
+        "start_date": "2024-03-21",
+        "end_date": "2024-09-17"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 71,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0029",
+    "name": "Cameron Reyes",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Kestrel",
+        "role": "Engineer",
+        "start_date": "2024-03-21",
+        "end_date": "2024-09-17"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 50,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0030",
+    "name": "Reese Kim",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Rust"
+    ],
+    "project_history": [
+      {
+        "project_name": "Project Kestrel",
+        "role": "Engineer",
+        "start_date": "2024-03-21",
+        "end_date": "2024-09-17"
+      },
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 58,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0031",
+    "name": "Quinn Iqbal",
+    "current_title": "Software Engineer",
+    "department": "Product Engineering",
+    "skills": [
+      "Kubernetes",
+      "Java",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 34,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0032",
+    "name": "Avery Patel",
+    "current_title": "SRE",
+    "department": "Product Engineering",
+    "skills": [
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 110,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0033",
+    "name": "Skyler Petrova",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "Java",
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 30,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0034",
+    "name": "Rowan Dubois",
+    "current_title": "SRE",
+    "department": "Platform",
+    "skills": [
+      "C++",
+      "React",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 61,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0035",
+    "name": "Emerson Kowalski",
+    "current_title": "Data Analyst",
+    "department": "Product Engineering",
+    "skills": [
+      "Java",
+      "Terraform",
+      "C++"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 57,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0036",
+    "name": "Blake Osei",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "C++",
+      "Python",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 113,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0037",
+    "name": "Hayden Yamamoto",
+    "current_title": "Data Analyst",
+    "department": "Infrastructure",
+    "skills": [
+      "Go",
+      "React",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 79,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0038",
+    "name": "Parker Nakamura",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Java",
+      "SQL",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 46,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0039",
+    "name": "Dakota Larsen",
+    "current_title": "Data Analyst",
+    "department": "Infrastructure",
+    "skills": [
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 67,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0040",
+    "name": "Alex Chen",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "React",
+      "Go",
+      "Kubernetes"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 100,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0041",
+    "name": "Jordan Silva",
+    "current_title": "Software Engineer",
+    "department": "Product Engineering",
+    "skills": [
+      "C++",
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 17,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0042",
+    "name": "Sam Fontaine",
+    "current_title": "SRE",
+    "department": "Platform",
+    "skills": [
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 115,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0043",
+    "name": "Taylor Okafor",
+    "current_title": "Software Engineer",
+    "department": "Infrastructure",
+    "skills": [
+      "Kubernetes"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 19,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0044",
+    "name": "Morgan Andersen",
+    "current_title": "Data Analyst",
+    "department": "Data",
+    "skills": [
+      "SQL",
+      "Go",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 99,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0045",
+    "name": "Casey Mbeki",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "Terraform",
+      "React",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 60,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0046",
+    "name": "Riley Novak",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 78,
+    "location": "Remote-US",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0047",
+    "name": "Jamie Haddad",
+    "current_title": "Software Engineer",
+    "department": "Platform",
+    "skills": [
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 113,
+    "location": "Berlin",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0048",
+    "name": "Drew Sorensen",
+    "current_title": "Data Analyst",
+    "department": "Data",
+    "skills": [
+      "C++",
+      "Go",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 19,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0049",
+    "name": "Cameron Reyes",
+    "current_title": "Product Manager",
+    "department": "Platform",
+    "skills": [
+      "SQL",
+      "Go"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 15,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0050",
+    "name": "Reese Kim",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "C++",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 96,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0051",
+    "name": "Quinn Iqbal",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Terraform",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 113,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0052",
+    "name": "Avery Patel",
+    "current_title": "Data Analyst",
+    "department": "Product Engineering",
+    "skills": [
+      "Kubernetes",
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 26,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0053",
+    "name": "Skyler Petrova",
+    "current_title": "Software Engineer",
+    "department": "Infrastructure",
+    "skills": [
+      "Go",
+      "Python",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 72,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0054",
+    "name": "Rowan Dubois",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "C++",
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 30,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0055",
+    "name": "Emerson Kowalski",
+    "current_title": "Data Analyst",
+    "department": "Infrastructure",
+    "skills": [
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 36,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0056",
+    "name": "Blake Osei",
+    "current_title": "Product Manager",
+    "department": "Platform",
+    "skills": [
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 30,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0057",
+    "name": "Hayden Yamamoto",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 77,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0058",
+    "name": "Parker Nakamura",
+    "current_title": "Data Analyst",
+    "department": "Engineering",
+    "skills": [
+      "Go",
+      "SQL",
+      "C++"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 11,
+    "location": "Toronto",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0059",
+    "name": "Dakota Larsen",
+    "current_title": "Data Analyst",
+    "department": "Infrastructure",
+    "skills": [
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 77,
+    "location": "Toronto",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0060",
+    "name": "Alex Chen",
+    "current_title": "Software Engineer",
+    "department": "Infrastructure",
+    "skills": [
+      "Terraform",
+      "Kubernetes",
+      "Go"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 88,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0061",
+    "name": "Jordan Silva",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 61,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0062",
+    "name": "Sam Fontaine",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Go",
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 71,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0063",
+    "name": "Taylor Okafor",
+    "current_title": "Data Analyst",
+    "department": "Data",
+    "skills": [
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 50,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0064",
+    "name": "Morgan Andersen",
+    "current_title": "SRE",
+    "department": "Product Engineering",
+    "skills": [
+      "Python",
+      "Terraform",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 41,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0065",
+    "name": "Casey Mbeki",
+    "current_title": "Data Analyst",
+    "department": "Data",
+    "skills": [
+      "Go"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 98,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0066",
+    "name": "Riley Novak",
+    "current_title": "SRE",
+    "department": "Product Engineering",
+    "skills": [
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 29,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0067",
+    "name": "Jamie Haddad",
+    "current_title": "SRE",
+    "department": "Product Engineering",
+    "skills": [
+      "Java",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 9,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0068",
+    "name": "Drew Sorensen",
+    "current_title": "SRE",
+    "department": "Engineering",
+    "skills": [
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 101,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0069",
+    "name": "Cameron Reyes",
+    "current_title": "SRE",
+    "department": "Platform",
+    "skills": [
+      "C++",
+      "Java",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 57,
+    "location": "Toronto",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0070",
+    "name": "Reese Kim",
+    "current_title": "Software Engineer",
+    "department": "Platform",
+    "skills": [
+      "Python",
+      "SQL",
+      "Kubernetes"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 77,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0071",
+    "name": "Quinn Iqbal",
+    "current_title": "Data Analyst",
+    "department": "Engineering",
+    "skills": [
+      "Terraform",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 113,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0072",
+    "name": "Avery Patel",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "Go",
+      "Kubernetes",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 116,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0073",
+    "name": "Skyler Petrova",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "Kubernetes"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 115,
+    "location": "Bengaluru",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0074",
+    "name": "Rowan Dubois",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "React",
+      "Kubernetes",
+      "Go"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 103,
+    "location": "Remote-EU",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0075",
+    "name": "Emerson Kowalski",
+    "current_title": "Software Engineer",
+    "department": "Infrastructure",
+    "skills": [
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 107,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0076",
+    "name": "Blake Osei",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 54,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0077",
+    "name": "Hayden Yamamoto",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "SQL",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 110,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0078",
+    "name": "Parker Nakamura",
+    "current_title": "Software Engineer",
+    "department": "Engineering",
+    "skills": [
+      "Kubernetes",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 36,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0079",
+    "name": "Dakota Larsen",
+    "current_title": "Product Manager",
+    "department": "Data",
+    "skills": [
+      "Terraform",
+      "React",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 68,
+    "location": "Austin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0080",
+    "name": "Alex Chen",
+    "current_title": "Data Analyst",
+    "department": "Data",
+    "skills": [
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 3,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0081",
+    "name": "Jordan Silva",
+    "current_title": "Data Analyst",
+    "department": "Data",
+    "skills": [
+      "Go",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 120,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0082",
+    "name": "Sam Fontaine",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "Java",
+      "Terraform",
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 44,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0083",
+    "name": "Taylor Okafor",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "SQL",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 98,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0084",
+    "name": "Morgan Andersen",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "Python",
+      "Kubernetes",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 29,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0085",
+    "name": "Casey Mbeki",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "C++",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 30,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0086",
+    "name": "Riley Novak",
+    "current_title": "Data Analyst",
+    "department": "Engineering",
+    "skills": [
+      "Terraform",
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 107,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0087",
+    "name": "Jamie Haddad",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 8,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0088",
+    "name": "Drew Sorensen",
+    "current_title": "Software Engineer",
+    "department": "Infrastructure",
+    "skills": [
+      "React",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 92,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0089",
+    "name": "Cameron Reyes",
+    "current_title": "Data Analyst",
+    "department": "Platform",
+    "skills": [
+      "Python",
+      "SQL",
+      "C++"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 102,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0090",
+    "name": "Reese Kim",
+    "current_title": "Product Manager",
+    "department": "Engineering",
+    "skills": [
+      "React",
+      "SQL",
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 61,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0091",
+    "name": "Quinn Iqbal",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "SQL",
+      "C++",
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 60,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0092",
+    "name": "Avery Patel",
+    "current_title": "Product Manager",
+    "department": "Infrastructure",
+    "skills": [
+      "React",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 84,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0093",
+    "name": "Skyler Petrova",
+    "current_title": "Product Manager",
+    "department": "Platform",
+    "skills": [
+      "C++",
+      "Python"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 94,
+    "location": "Berlin",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0094",
+    "name": "Rowan Dubois",
+    "current_title": "SRE",
+    "department": "Data",
+    "skills": [
+      "Go",
+      "C++",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 32,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0095",
+    "name": "Emerson Kowalski",
+    "current_title": "Data Analyst",
+    "department": "Engineering",
+    "skills": [
+      "SQL",
+      "Kubernetes"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 72,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0096",
+    "name": "Blake Osei",
+    "current_title": "Data Analyst",
+    "department": "Infrastructure",
+    "skills": [
+      "Python",
+      "SQL"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 115,
+    "location": "Toronto",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0097",
+    "name": "Hayden Yamamoto",
+    "current_title": "Software Engineer",
+    "department": "Data",
+    "skills": [
+      "SQL",
+      "C++"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 117,
+    "location": "Bengaluru",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0098",
+    "name": "Parker Nakamura",
+    "current_title": "Data Analyst",
+    "department": "Infrastructure",
+    "skills": [
+      "Java"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 58,
+    "location": "Bengaluru",
+    "travel_preference": "opted_into_year_round_travel"
+  },
+  {
+    "employee_id": "E0099",
+    "name": "Dakota Larsen",
+    "current_title": "SRE",
+    "department": "Infrastructure",
+    "skills": [
+      "Kubernetes",
+      "SQL",
+      "React"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 120,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  },
+  {
+    "employee_id": "E0100",
+    "name": "Alex Chen",
+    "current_title": "Software Engineer",
+    "department": "Infrastructure",
+    "skills": [
+      "Python",
+      "C++",
+      "Terraform"
+    ],
+    "project_history": [
+      {
+        "project_name": "Internal Tools Migration",
+        "role": "Contributor",
+        "start_date": "2025-06-04",
+        "end_date": "2025-12-21"
+      }
+    ],
+    "tenure_months": 57,
+    "location": "Remote-US",
+    "travel_preference": "standard"
+  }
+]
