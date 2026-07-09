@@ -1,6 +1,9 @@
 import json
 import random
 from datetime import date, timedelta
+from pathlib import Path
+
+DATA_DIR = Path(__file__).parent
 
 random.seed(42)  # reproducible: do not change without re-syncing any hand-labeled golden set
 
@@ -186,11 +189,11 @@ def main():
     assignments = build_project_assignments(all_employees)
     positions = build_open_positions()
 
-    with open("data/employees.json", "w") as f:
+    with open(DATA_DIR / "employees.json", "w", encoding="utf-8") as f:
         json.dump(all_employees, f, indent=2)
-    with open("data/project_assignments.json", "w") as f:
+    with open(DATA_DIR / "project_assignments.json", "w", encoding="utf-8") as f:
         json.dump(assignments, f, indent=2)
-    with open("data/open_positions.json", "w") as f:
+    with open(DATA_DIR / "open_positions.json", "w", encoding="utf-8") as f:
         json.dump(positions, f, indent=2)
 
     print(f"Generated {len(all_employees)} employees "
