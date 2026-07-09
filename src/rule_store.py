@@ -1,8 +1,11 @@
 import sqlite3
 from datetime import datetime, timezone
+from pathlib import Path
+
+DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "rules.db"
 
 
-def init_db(path: str = "rules.db") -> None:
+def init_db(path: str | Path = DEFAULT_DB_PATH) -> None:
     conn = sqlite3.connect(path)
     conn.execute("""
         CREATE TABLE IF NOT EXISTS rules (
