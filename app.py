@@ -169,25 +169,16 @@ with tab_matches:
         else:
             st.error(explain_exclusion(featured_label, featured_score.reason))
 
-    st.subheader("All candidates")
-    # Displayed in employee-ID order for easy scanning against the golden set — the
-    # underlying `ranked` order (best skills/tenure match first) still drives which
-    # eligible people get offered in the write-back selector below.
-    for r in sorted(ranked, key=lambda r: r.employee_id):
-        emp = next(e for e in employees if e.employee_id == r.employee_id)
-        emp_label = f"{emp.name} ({emp.employee_id})"
-        if r.eligible:
-            st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
-        else:
-            st.error(explain_exclusion(emp_label, r.reason))
-
-    for emp_id, reason in sorted(excluded_by_rule.items()):
-        emp = next(e for e in employees if e.employee_id == emp_id)
-        st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
-
     st.subheader("Approve write-back")
+    st.caption("Select from the top-ranked eligible candidates (best skills/tenure match first) and click "
+               "Approve to mark them redeployed — nothing is written until you do.")
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
-    selected = st.multiselect("Select employees to mark redeployed:", options=eligible_ids, default=[])
+    selected = st.multiselect(
+        "Select employees to mark redeployed:",
+        options=eligible_ids,
+        default=[],
+        format_func=lambda eid: f"{eid} — {id_to_name[eid]}",
+    )
     if st.button("Approve and write back"):
         result = apply_writeback(
             employee_ids=selected,
@@ -200,6 +191,22 @@ with tab_matches:
         if result["not_found"]:
             st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
         st.rerun()
+
+    st.subheader("All candidates")
+    # Displayed in employee-ID order for easy scanning against the golden set — the
+    # underlying `ranked` order (best skills/tenure match first) still drives which
+    # eligible people get offered in the write-back selector above.
+    for r in sorted(ranked, key=lambda r: r.employee_id):
+        emp = next(e for e in employees if e.employee_id == r.employee_id)
+        emp_label = f"{emp.name} ({emp.employee_id})"
+        if r.eligible:
+            st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
+        else:
+            st.error(explain_exclusion(emp_label, r.reason))
+
+    for emp_id, reason in sorted(excluded_by_rule.items()):
+        emp = next(e for e in employees if e.employee_id == emp_id)
+        st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
 
 with tab_summary:
     # Scoped to P001 only — the position this rule is actually about, using the same
