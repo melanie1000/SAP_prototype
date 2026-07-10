@@ -46,41 +46,58 @@ available_employees = [e for e in employees if not e.redeployment_status]
 
 col_question, col_rule = st.columns(2)
 
+def _apply_bulk_correction(people, group_label):
+    for emp in people:
+        correct_skill_tag(employee_id=emp.employee_id, skill_to_add="Rust", approved_by=APPROVER_NAME)
+    st.session_state["featured_employee_id"] = people[0].employee_id
+    st.success(f"Corrected {len(people)} record(s) in the {group_label!r} group.")
+    st.rerun()
+
+
 with col_question:
     st.subheader("Ask a question")
-    query_text = st.text_input("Ask a question about project history:", value="")
-    if query_text and os.environ.get("ANTHROPIC_API_KEY"):
-        try:
-            retrieval_filter = _cached_interpret_retrieval_query(query_text)
-        except Exception as e:
-            st.error(f"Couldn't interpret that query (API error): {e}")
-            retrieval_filter = {"project_name": None}
+    query_key = f"query_input_{st.session_state.get('query_nonce', 0)}"
+    query_text = st.text_input("Ask a question about project history:", value="", key=query_key)
 
+    if query_text:
+        if not os.environ.get("ANTHROPIC_API_KEY"):
+            st.warning("No ANTHROPIC_API_KEY found in .env — retrieval query will fail until it's set.")
+        else:
+            try:
+                retrieval_filter = _cached_interpret_retrieval_query(query_text)
+            except Exception as e:
+                st.error(f"Couldn't interpret that query (API error): {e}")
+                retrieval_filter = {"project_name": None}
+            st.session_state["last_retrieval_filter"] = retrieval_filter
+            # Swap in a fresh, blank text_input on the next render (rather than leaving this
+            # one showing the just-submitted text) by changing the key it's created with.
+            st.session_state["query_nonce"] = st.session_state.get("query_nonce", 0) + 1
+            st.rerun()
+
+    retrieval_filter = st.session_state.get("last_retrieval_filter")
+    if retrieval_filter:
         if retrieval_filter.get("error"):
             st.error(f"Couldn't map that query to a project: {retrieval_filter['error']}")
         else:
             query_results = apply_retrieval_filter(retrieval_filter, employees)
-
             st.write(f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\":")
-            for emp in query_results:
-                skills_str = ", ".join(emp.skills) if emp.skills else "(none listed)"
-                st.write(f"- {emp.name} ({emp.employee_id}) — {emp.current_title}, {emp.department} — Skills: {skills_str}")
-                if st.button("Add 'Rust' skill tag", key=f"correct_{emp.employee_id}"):
-                    correction = correct_skill_tag(
-                        employee_id=emp.employee_id,
-                        skill_to_add="Rust",
-                        approved_by=APPROVER_NAME,
-                    )
-                    if correction["result"] == "added":
-                        st.session_state["featured_employee_id"] = emp.employee_id
-                        st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
-                        st.rerun()
-                    elif correction["result"] == "already_present":
-                        st.info(f"{emp.name} already has the Rust tag — no change made.")
-                    else:
-                        st.error(f"Could not find employee {emp.employee_id} — no change made.")
-    elif query_text:
-        st.warning("No ANTHROPIC_API_KEY found in .env — retrieval query will fail until it's set.")
+
+            rust_tagged = [e for e in query_results if "Rust" in e.skills]
+            empty_skills = [e for e in query_results if not e.skills]
+            other_skills = [e for e in query_results if e.skills and "Rust" not in e.skills]
+
+            for group_label, group in [
+                ("Skills: Rust", rust_tagged),
+                ("Skills: empty", empty_skills),
+                ("Skills: other", other_skills),
+            ]:
+                st.write(f"**{group_label}** ({len(group)})")
+                for emp in group:
+                    skills_str = ", ".join(emp.skills) if emp.skills else "(none listed)"
+                    st.write(f"- {emp.name} ({emp.employee_id}) — {emp.current_title}, {emp.department} — Skills: {skills_str}")
+                if group and group_label != "Skills: Rust":
+                    if st.button(f"Add 'Rust' skill tag to all {len(group)} in this group", key=f"bulk_{group_label}"):
+                        _apply_bulk_correction(group, group_label)
 
 with col_rule:
     st.subheader("Eligibility rule")
