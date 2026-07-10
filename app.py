@@ -65,11 +65,13 @@ if query_text and os.environ.get("ANTHROPIC_API_KEY"):
         query_results = apply_retrieval_filter(retrieval_filter, employees)
 
         st.write(f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\":")
+        flagged_ids = []
         for emp in query_results:
             has_clean_tag = has_required_skills(emp, ["Rust"])
             if has_clean_tag:
                 st.write(f"- {emp.name} ({emp.employee_id}) — has Rust tag")
             else:
+                flagged_ids.append(emp.employee_id)
                 st.warning(f"- {emp.name} ({emp.employee_id}) — missing/inconsistent Rust tag: {emp.skills}")
                 if st.button(f"Correct tag: add 'Rust' for {emp.name}", key=f"correct_{emp.employee_id}"):
                     if not approver_name.strip():
@@ -81,12 +83,17 @@ if query_text and os.environ.get("ANTHROPIC_API_KEY"):
                             approved_by=approver_name.strip(),
                         )
                         if correction["result"] == "added":
+                            st.session_state["featured_employee_id"] = emp.employee_id
                             st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
                             st.rerun()
                         elif correction["result"] == "already_present":
                             st.info(f"{emp.name} already has the Rust tag — no change made.")
                         else:
                             st.error(f"Could not find employee {emp.employee_id} — no change made.")
+        # Default the featured-candidate lookup below to the first flagged person, so the
+        # single-case view has someone worth watching before any correction happens.
+        if flagged_ids and "featured_employee_id" not in st.session_state:
+            st.session_state["featured_employee_id"] = flagged_ids[0]
 elif query_text:
     st.warning("No ANTHROPIC_API_KEY found in .env — retrieval query will fail until it's set.")
 
@@ -123,6 +130,29 @@ with tab1:
     eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, position)
 
+    st.subheader("Featured candidate")
+    st.caption(
+        "Look up any one person's status directly, regardless of where they rank in the list "
+        "below — useful for tracking a specific person (e.g. someone just corrected in Step 1) "
+        "who may not be in the top slice shown further down."
+    )
+    id_to_name = {e.employee_id: e.name for e in employees}
+    featured_id = st.selectbox(
+        "Employee ID:",
+        options=sorted(id_to_name),
+        format_func=lambda eid: f"{eid} — {id_to_name[eid]}",
+        key="featured_employee_id",
+    )
+    featured_score = next((r for r in ranked if r.employee_id == featured_id), None)
+    if featured_score is None:
+        st.info(f"{id_to_name[featured_id]} is excluded by the persisted rule "
+                f"(see the exclusions listed below) or not currently in the redeployment pool.")
+    elif featured_score.eligible:
+        st.success(explain_match(id_to_name[featured_id], featured_score.matched_skills, position.role_title, available=True))
+    else:
+        st.error(explain_exclusion(id_to_name[featured_id], featured_score.reason))
+
+    st.subheader("All candidates")
     shown = ranked[:15]
     for r in shown:
         emp = next(e for e in employees if e.employee_id == r.employee_id)
