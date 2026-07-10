@@ -118,9 +118,11 @@ with st.container(border=True):
     banner_col1, banner_col2, banner_col3 = st.columns(3)
     banner_col1.metric("Qualified candidates", f"{total_matches} for {position.headcount_needed} positions")
     banner_col2.metric("Slots with no confident match", total_no_confident)
-    banner_col3.metric("Cost savings", f"${cost_avoidance:,.0f}")
-    banner_col3.caption("This value represents the savings from redeploying internal hires versus hiring new "
-                         "employees for the project. Updates live as the rule and candidate corrections below change.")
+    with banner_col3.container(key="cost_savings_metric"):
+        st.metric("Cost savings", f"${cost_avoidance:,.0f}")
+        st.caption("This value represents the savings from redeploying internal hires versus hiring new "
+                   "employees for the project. Updates live as the rule and candidate corrections below change.")
+    st.html("<style>.st-key-cost_savings_metric [data-testid='stMetricValue'] { color: #16a34a; }</style>")
 
 col_question, col_rule, col_approve = st.columns(3)
 
