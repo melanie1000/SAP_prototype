@@ -182,14 +182,17 @@ with tab2:
         "for this prototype (see README non-goals)."
     )
 
-    cost_avoidance = total_matches * EXTERNAL_HIRE_BASELINE * (4 - 1)  # 4x midpoint of cited 3-5x range
+    MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
+    cost_avoidance = total_matches * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier
     st.metric("Total redeployment matches", total_matches)
     st.metric("Slots with no confident match", total_no_confident)
     st.metric("Estimated cost avoidance (illustrative)", f"${cost_avoidance:,.0f}")
     st.caption(
         f"Assumes ${EXTERNAL_HIRE_BASELINE:,} non-executive cost-per-hire baseline (SHRM 2025 "
-        "Benchmarking Report) × 4x midpoint of the cited 3-5x external-hire-cost multiplier "
-        "(Josh Bersin Company, 2023 — see README Sources). This baseline is an across-industry, "
+        f"Benchmarking Report). If an external hire costs {MULTIPLIER_MIDPOINT}x the baseline "
+        "(midpoint of the cited 3-5x range, Josh Bersin Company 2023 — see README Sources) and an "
+        f"internal redeployment costs roughly 1x, the avoided cost per match is the {MULTIPLIER_MIDPOINT - 1}x "
+        "difference, not the full multiplier. This baseline is also an across-industry, "
         "across-role-type average — a specialized technical hire (Rust engineer) likely costs more "
         "once longer sourcing/vetting time is factored in. Treat this as a conservative estimate, "
         "not a precise figure for this role type."

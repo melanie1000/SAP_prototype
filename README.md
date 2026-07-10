@@ -49,9 +49,7 @@ Design background and the full planning conversation: [docs/planning_transcript.
   planning in the age of AI," McKinsey & Company.
   https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/the-critical-role-of-strategic-workforce-planning-in-the-age-of-ai
 - **External-hire cost-per-hire baseline: $5,475 (non-executive).** SHRM 2025 Benchmarking
-  Report, non-executive cost-per-hire benchmark. The cost-avoidance calculation is: baseline
-  cost per hire ($5,475, SHRM 2025) × multiplier (3-5x, Josh Bersin Company 2023, cited
-  separately above) × number of avoided external hires. Note: the commonly-cited $4,700
+  Report, non-executive cost-per-hire benchmark. Note: the commonly-cited $4,700
   figure is from an older SHRM benchmarking cycle and is now outdated — not used here.
 
 **Source quality note:** Pin and similarly-positioned industry blogs are vendor content
@@ -63,6 +61,8 @@ evidentiary weight.
 
 Mock EC data → Deterministic scorer → NL rule interpreter (Anthropic API call) →
 Explanation/output layer, with a SQLite rule-store sidecar persisting rules between runs.
+
+![Architecture diagram](docs/architecture.png)
 
 - **Deterministic scorer** (`src/scorer.py`): pure logic, no LLM. Exact-string skill
   matching and availability-window checks on structured fields.
@@ -82,8 +82,9 @@ Explanation/output layer, with a SQLite rule-store sidecar persisting rules betw
 Mock SuccessFactors EC data, deliberately imperfect. `project_assignments` and the
 `travel_preference` field are flagged as custom MDF objects/fields, not out-of-the-box EC.
 Three deliberate data-quality issues are injected into ~100 mock employees (see
-`data/generate_mock_data.py`): missing skill tags, inconsistent tag spelling ("Rust" /
-"Rust programming" / "RUST"), and one stale tag (skill unused 18+ months).
+`data/generate_mock_data.py`): missing skill tags (5 employees), inconsistent tag spelling
+("Rust" / "Rust programming" / "RUST", 5 employees), and stale tags — a skill tag present
+despite no matching project work in 18+ months (5 employees).
 
 ## Demo flow
 
@@ -110,11 +111,15 @@ report the precision score.
 
 ## Assumptions and tradeoffs
 
-The scale view's cost-avoidance estimate uses a $5,475 non-executive cost-per-hire baseline
-(SHRM 2025 Benchmarking Report) multiplied by the cited 3-5x external-hire-cost multiplier.
-This baseline is an across-industry, across-role-type average — a specialized technical hire
-(Rust engineer) likely costs more once longer sourcing/vetting time is factored in. Treat the
-resulting figure as a conservative baseline, not a precise estimate for this specific role type.
+The scale view's cost-avoidance estimate is: `matches × $5,475 baseline (SHRM 2025
+Benchmarking Report) × 3`, where 3 is the *marginal* savings implied by the cited 3-5x
+external-hire-cost multiplier (midpoint 4x) — i.e. if an external hire costs 4x the
+baseline and an internal redeployment costs roughly 1x the baseline, the amount actually
+*avoided* by redeploying is the difference, `(4 - 1) = 3` times the baseline, not the full
+4x. This baseline is also an across-industry, across-role-type average — a specialized
+technical hire (Rust engineer) likely costs more once longer sourcing/vetting time is
+factored in. Treat the resulting figure as a conservative estimate, not a precise one for
+this specific role type.
 
 The scale view's per-position eligible counts are not deduplicated across positions — a
 person eligible for two roles is counted in both until a write-back approval removes them
@@ -134,10 +139,21 @@ this prototype.
 
 ## Running it
 
-1. `pip install -r requirements.txt` (or use the project's `venv/`: `./venv/bin/pip install -r requirements.txt`)
-2. Copy `.env.example` to `.env` and add your `ANTHROPIC_API_KEY`.
-3. `python data/generate_mock_data.py`
-4. `streamlit run app.py`
+Requires Python 3.10+.
+
+1. Create a virtual environment and install dependencies:
+   ```
+   python3 -m venv venv
+   ./venv/bin/pip install -r requirements.txt
+   ```
+2. Copy `.env.example` to `.env` and add your `ANTHROPIC_API_KEY`. The app runs and the
+   deterministic scorer/data views work without a key — only the two LLM-backed features
+   (the persisted eligibility rule and the one-shot retrieval query) require it, and degrade
+   to a warning message rather than crashing if it's missing.
+3. `./venv/bin/python data/generate_mock_data.py`
+4. `./venv/bin/streamlit run app.py`
+
+Run the test suite: `./venv/bin/python -m pytest`
 
 ## Sources
 
@@ -163,10 +179,9 @@ this prototype.
   Visier, 2026. https://www.visier.com/blog/true-cost-layoff-boomerangs/ — also covered
   independently in Fast Company, "Why companies hire back people they just laid off," Dec
   2025. https://www.fastcompany.com/91447602/why-companies-hire-back-people-they-just-laid-off
-  - The Visier researcher's framing is the strongest single line for the README's problem
-    statement — paraphrased, not quoted verbatim here to respect source wording, but
-    characterized in the Fast Company piece as: rehiring after layoffs reflects a failure
-    of workforce planning and long-term strategic thinking, not just an AI story.
+  - The Visier researcher's framing, as characterized in the Fast Company piece: rehiring
+    after layoffs reflects a failure of workforce planning and long-term strategic
+    thinking, not just an AI story.
 - **3-5x cost multiplier (external hire vs. internal redeployment):** originates with **the
   Josh Bersin Company (2023)** — external hiring costs 3-5x more than internal placement
   once sourcing, interviewing, onboarding, and ramp-up are factored in. Cited secondhand in
@@ -182,12 +197,10 @@ this prototype.
   planning in the age of AI," McKinsey & Company.
   https://www.mckinsey.com/capabilities/people-and-organizational-performance/our-insights/the-critical-role-of-strategic-workforce-planning-in-the-age-of-ai
 - **External-hire cost-per-hire baseline: $5,475 (non-executive).** SHRM 2025 Benchmarking
-  Report, non-executive cost-per-hire benchmark. This is a newly-added dollar baseline —
-  this spec previously had only the 3-5x multiplier above with no absolute figure to apply
-  it to. The cost-avoidance calculation is: baseline cost per hire ($5,475, SHRM 2025) ×
-  multiplier (3-5x, Josh Bersin Company 2023, cited separately above) × number of avoided
-  external hires. Note: the commonly-cited $4,700 figure is from an older SHRM benchmarking
-  cycle and is now outdated — do not use it.
+  Report, non-executive cost-per-hire benchmark. Note: the commonly-cited $4,700 figure is
+  from an older SHRM benchmarking cycle and is now outdated — do not use it. See "Assumptions
+  and tradeoffs" above for how this baseline and the Bersin multiplier combine into the
+  scale view's cost-avoidance figure.
 
 **Source quality note:** Pin and similarly-positioned industry blogs are vendor content
 with a commercial interest in how the internal-mobility problem is framed. CNBC/Robert
