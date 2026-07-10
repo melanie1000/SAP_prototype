@@ -4,6 +4,8 @@ import json
 from dotenv import load_dotenv
 import anthropic
 
+from src.models import Employee, ProjectAssignment
+
 load_dotenv()
 
 SYSTEM_PROMPT = """You translate a People Ops planner's natural-language eligibility rule into a \
@@ -16,8 +18,13 @@ Output ONLY a JSON object with this exact shape, no prose:
   "unless": {"field": "<employee field name>", "equals": "<value>"} | null
 }
 
-Valid fields: intensity_flag (from the employee's current assignment), travel_preference, \
-department, location. If the rule doesn't map cleanly to this shape, output:
+Valid fields and their exact allowed values:
+- intensity_flag: "high-travel" or "standard"
+- travel_preference: "standard" or "opted_into_year_round_travel"
+- department: "Engineering", "Platform", "Data", "Infrastructure", or "Product Engineering"
+- location: "Austin", "Remote-US", "Berlin", "Bengaluru", "Toronto", or "Remote-EU"
+
+If the rule doesn't map cleanly to this shape, output:
 {"exclude_if": null, "unless": null, "error": "<why it doesn't map>"}
 """
 
@@ -27,14 +34,19 @@ def interpret_rule(rule_text: str, client: anthropic.Anthropic | None = None) ->
     response = client.messages.create(
         model="claude-sonnet-5",
         max_tokens=300,
+        thinking={"type": "disabled"},
         system=SYSTEM_PROMPT,
         messages=[{"role": "user", "content": rule_text}],
     )
-    text = response.content[0].text.strip()
-    return json.loads(text)
+    text_block = next(block for block in response.content if block.type == "text")
+    return json.loads(text_block.text.strip())
 
 
-def apply_filter(filter_dict: dict, employees: list, assignments_by_employee: dict) -> dict[str, str]:
+def apply_filter(
+    filter_dict: dict,
+    employees: list[Employee],
+    assignments_by_employee: dict[str, ProjectAssignment],
+) -> dict[str, str]:
     """Returns {employee_id: exclusion_reason} for employees excluded by the rule."""
     excluded = {}
     exclude_if = filter_dict.get("exclude_if")
