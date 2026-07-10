@@ -4,7 +4,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from src.data_loader import load_employees, load_project_assignments, load_open_positions, assignments_by_employee
-from src.scorer import rank_candidates, has_required_skills
+from src.scorer import rank_candidates
 from src.rule_store import init_db, save_rule, get_active_rule, DEFAULT_DB_PATH
 from src.rule_interpreter import interpret_rule, apply_filter, interpret_retrieval_query, apply_retrieval_filter
 from src.explain import explain_match, explain_exclusion
@@ -62,32 +62,23 @@ with col_question:
             query_results = apply_retrieval_filter(retrieval_filter, employees)
 
             st.write(f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\":")
-            flagged_ids = []
             for emp in query_results:
-                has_clean_tag = has_required_skills(emp, ["Rust"])
-                if has_clean_tag:
-                    st.write(f"- {emp.name} ({emp.employee_id}) — has Rust tag")
-                else:
-                    flagged_ids.append(emp.employee_id)
-                    st.warning(f"- {emp.name} ({emp.employee_id}) — missing/inconsistent Rust tag: {emp.skills}")
-                    if st.button(f"Correct tag: add 'Rust' for {emp.name}", key=f"correct_{emp.employee_id}"):
-                        correction = correct_skill_tag(
-                            employee_id=emp.employee_id,
-                            skill_to_add="Rust",
-                            approved_by=APPROVER_NAME,
-                        )
-                        if correction["result"] == "added":
-                            st.session_state["featured_employee_id"] = emp.employee_id
-                            st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
-                            st.rerun()
-                        elif correction["result"] == "already_present":
-                            st.info(f"{emp.name} already has the Rust tag — no change made.")
-                        else:
-                            st.error(f"Could not find employee {emp.employee_id} — no change made.")
-            # Default the featured-candidate lookup below to the first flagged person, so the
-            # single-case view has someone worth watching before any correction happens.
-            if flagged_ids and "featured_employee_id" not in st.session_state:
-                st.session_state["featured_employee_id"] = flagged_ids[0]
+                skills_str = ", ".join(emp.skills) if emp.skills else "(none listed)"
+                st.write(f"- {emp.name} ({emp.employee_id}) — {emp.current_title}, {emp.department} — Skills: {skills_str}")
+                if st.button("Add 'Rust' skill tag", key=f"correct_{emp.employee_id}"):
+                    correction = correct_skill_tag(
+                        employee_id=emp.employee_id,
+                        skill_to_add="Rust",
+                        approved_by=APPROVER_NAME,
+                    )
+                    if correction["result"] == "added":
+                        st.session_state["featured_employee_id"] = emp.employee_id
+                        st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
+                        st.rerun()
+                    elif correction["result"] == "already_present":
+                        st.info(f"{emp.name} already has the Rust tag — no change made.")
+                    else:
+                        st.error(f"Could not find employee {emp.employee_id} — no change made.")
     elif query_text:
         st.warning("No ANTHROPIC_API_KEY found in .env — retrieval query will fail until it's set.")
 
