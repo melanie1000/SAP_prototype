@@ -9,13 +9,8 @@ Run: ./venv/bin/python -m src.run_eval
 from src.eval import load_golden_set, compute_positive_precision, compute_negative_exclusion_rate, find_mismatches
 from src.data_loader import load_employees, load_project_assignments, load_open_positions, assignments_by_employee
 from src.scorer import rank_candidates
-from src.rule_store import init_db, get_active_rule, save_rule, DEFAULT_DB_PATH
+from src.rule_store import init_db, get_active_rule, save_rule, DEFAULT_DB_PATH, DEFAULT_RULE
 from src.rule_interpreter import interpret_rule, apply_filter
-
-DEFAULT_RULE = (
-    "Don't count someone as available if their current project's intensity flag is "
-    "high-travel, unless their travel preference is opted_into_year_round_travel"
-)
 
 
 def main():
@@ -32,7 +27,10 @@ def main():
 
     filter_dict = interpret_rule(rule_text)
     excluded_by_rule = apply_filter(filter_dict, employees, assignments)
-    eligible_pool = [e for e in employees if e.employee_id not in excluded_by_rule]
+    # Matches app.py: exclude anyone already written back to a redeployment, so the eval
+    # reflects the same candidate pool the live UI would show, not a stale/broader one.
+    available_employees = [e for e in employees if not e.redeployment_status]
+    eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
 
     top3_by_position = {}
     eligible_by_position = {}

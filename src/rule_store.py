@@ -4,6 +4,11 @@ from pathlib import Path
 
 DEFAULT_DB_PATH = Path(__file__).resolve().parent.parent / "rules.db"
 
+DEFAULT_RULE = (
+    "Don't count someone as available if their current project's intensity flag is "
+    "high-travel, unless their travel preference is opted_into_year_round_travel"
+)
+
 
 def init_db(path: str | Path = DEFAULT_DB_PATH) -> None:
     conn = sqlite3.connect(path)

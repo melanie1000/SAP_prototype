@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from src.data_loader import load_employees, load_project_assignments, load_open_positions, assignments_by_employee
 from src.scorer import rank_candidates, has_required_skills
-from src.rule_store import init_db, save_rule, get_active_rule, DEFAULT_DB_PATH
+from src.rule_store import init_db, save_rule, get_active_rule, DEFAULT_DB_PATH, DEFAULT_RULE
 from src.rule_interpreter import interpret_rule, apply_filter, interpret_retrieval_query, apply_retrieval_filter
 from src.explain import explain_match, explain_exclusion
 from src.writeback import apply_writeback, correct_skill_tag
@@ -13,10 +13,6 @@ from src.writeback import apply_writeback, correct_skill_tag
 load_dotenv()
 
 RULE_DB = DEFAULT_DB_PATH  # anchored to repo root by rule_store.py, not cwd-relative
-DEFAULT_RULE = (
-    "Don't count someone as available if their current project's intensity flag is "
-    "high-travel, unless their travel preference is opted_into_year_round_travel"
-)
 EXTERNAL_HIRE_BASELINE = 5_475  # SHRM 2025 Benchmarking Report, non-executive cost-per-hire (see README Sources)
 
 
