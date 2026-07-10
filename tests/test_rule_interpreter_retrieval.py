@@ -54,6 +54,24 @@ def test_apply_retrieval_filter_matches_one_of_multiple_history_entries():
     assert [e.employee_id for e in results] == ["E0001"]
 
 
+def test_apply_retrieval_filter_matches_when_extracted_name_omits_leading_word():
+    # Reproduces a real bug: querying "who worked on project falcon?" (lowercase) had the
+    # LLM extract just "Falcon", not "Project Falcon" — exact-match then silently found nobody.
+    matching = _employee_with_project("E0001", "Project Falcon")
+
+    results = apply_retrieval_filter({"project_name": "Falcon"}, [matching])
+
+    assert [e.employee_id for e in results] == ["E0001"]
+
+
+def test_apply_retrieval_filter_does_not_match_unrelated_substring():
+    non_matching = _employee_with_project("E0002", "Project Kestrel")
+
+    results = apply_retrieval_filter({"project_name": "Falcon"}, [non_matching])
+
+    assert results == []
+
+
 def test_apply_retrieval_filter_handles_empty_project_history():
     emp = Employee(
         employee_id="E0001", name="Test", current_title="SE", department="Eng",

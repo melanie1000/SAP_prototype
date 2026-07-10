@@ -98,12 +98,22 @@ def interpret_retrieval_query(query_text: str, client: anthropic.Anthropic | Non
 
 
 def apply_retrieval_filter(filter_dict: dict, employees: list[Employee]) -> list[Employee]:
-    """Returns employees whose project_history contains a matching project_name. Read-only — never persists to rule_store."""
+    """Returns employees whose project_history contains a matching project_name. Read-only — never persists to rule_store.
+
+    Matches by substring containment (either direction), not exact equality: the LLM's
+    extraction of "the project name" from a casual query is inconsistent about whether a
+    leading generic word like "project" is part of the proper name (e.g. "project falcon?"
+    can extract just "Falcon" while "Project Falcon" extracts the full name) — exact
+    equality made this silently return zero results depending on how the question was phrased.
+    """
     project_name = filter_dict.get("project_name")
     if not project_name:
         return []
     target = project_name.strip().lower()
     return [
         emp for emp in employees
-        if any(entry.project_name.strip().lower() == target for entry in emp.project_history)
+        if any(
+            target in entry.project_name.strip().lower() or entry.project_name.strip().lower() in target
+            for entry in emp.project_history
+        )
     ]
