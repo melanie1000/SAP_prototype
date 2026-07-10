@@ -95,23 +95,23 @@ The app is a single scrolling view, no tabs.
    Computed before the input row renders, so it already reflects whatever rule and corrections
    are currently active, and updates immediately as you edit the rule text below (no Save
    required to see it move) or approve a bulk skill-tag correction.
-2. **Ask a question** (below the banner, left box) — a one-shot, read-only natural-language
-   lookup against project history (e.g. "who worked on Project Falcon?"). Never touches the
-   persisted rule. Results render inside a collapsible expander, bucketed by current skill-tag
-   state (`Skills: Rust`, `Skills: empty`, `Skills: other`), and a bulk "Add 'Rust' skill tag to
-   all N in this group" button lets a human approve corrections for an entire non-clean bucket
-   at once, logged to the audit trail.
-3. **Eligibility rule** (right box) — a free-text standing rule, e.g. "must know Rust, be
+2. **Ask a question** (below the banner, left of a 3-column row) — a one-shot, read-only
+   natural-language lookup against project history (e.g. "who worked on Project Falcon?").
+   Never touches the persisted rule. Results render inside a collapsible expander, bucketed by
+   current skill-tag state (`Skills: Rust`, `Skills: empty`, `Skills: other`), and a bulk "Add
+   'Rust' skill tag to all N in this group" button lets a human approve corrections for an
+   entire non-clean bucket at once, logged to the audit trail.
+3. **Eligibility rule** (middle column) — a free-text standing rule, e.g. "must know Rust, be
    available within 30 days, and not mind more travel." All eligibility criteria — required
    skills, timing, and travel tolerance — come entirely from what's typed here; nothing is
    pre-baked into the mock position data. Click Save to persist it; it's re-applied live as
    corrections land.
-4. **All candidates** (below, left column, under "Ask a question") — every candidate in the
-   pool, sorted by employee ID, each with a plain-language match or exclusion reason.
-5. **Approve candidate for re-deployment** (below, right column, under "Eligibility rule")
-   — every eligible candidate, ranked best skills/tenure match first, requiring explicit
-   selection before "Select and Approve" (nothing is pre-selected). A per-employee lookup box
-   sits at the very bottom of the page.
+4. **Approve candidate for re-deployment** (right column, next to Eligibility rule) — every
+   eligible candidate, ranked best skills/tenure match first, requiring explicit selection
+   before "Select and Approve" (nothing is pre-selected).
+5. **All candidates** (full-width section below the 3-column row) — every candidate in the
+   pool, sorted by employee ID, each with a plain-language match or exclusion reason. A
+   per-employee lookup box sits at the very bottom of the page.
 
 ## Evaluation
 
