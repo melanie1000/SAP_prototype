@@ -38,7 +38,9 @@ init_db(RULE_DB)
 
 st.set_page_config(page_title="Redeployment Decision-Support Agent", layout="wide")
 st.title("Redeployment Decision-Support Agent")
-st.number_input("Positions needed:", min_value=1, step=1, value=DEFAULT_HEADCOUNT, key=HEADCOUNT_KEY)
+st.markdown("##### Positions needed:")
+st.number_input("Positions needed:", min_value=1, step=1, value=DEFAULT_HEADCOUNT, key=HEADCOUNT_KEY,
+                 label_visibility="collapsed", width=150)
 
 if "P001" not in {p.position_id for p in load_open_positions()}:
     st.error("Mock data is missing the expected critical position 'P001' — regenerate data/open_positions.json.")
