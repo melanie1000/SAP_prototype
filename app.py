@@ -116,9 +116,9 @@ if filter_dict.get("error"):
 
 excluded_by_rule = apply_filter(filter_dict, employees, assignments)
 
-tab1, tab2 = st.tabs(["Single-case view", "Scale view"])
+col_matches, col_summary = st.columns([2, 1])
 
-with tab1:
+with col_matches:
     st.markdown("## Candidate Matches")
     position = positions["P001"]
     st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}, "
@@ -176,7 +176,8 @@ with tab1:
             st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
         st.rerun()
 
-with tab2:
+with col_summary:
+    st.markdown("## Summary")
     total_matches = 0
     total_no_confident = 0
     for pos_id, position in positions.items():
