@@ -176,15 +176,12 @@ with col_matches:
         st.error(explain_exclusion(id_to_name[featured_id], featured_score.reason))
 
     st.subheader("All candidates")
-    shown = ranked[:15]
-    for r in shown:
+    for r in ranked:
         emp = next(e for e in employees if e.employee_id == r.employee_id)
         if r.eligible:
             st.success(explain_match(emp.name, r.matched_skills, position.role_title, available=r.eligible))
         else:
             st.error(explain_exclusion(emp.name, r.reason))
-    if len(ranked) > len(shown):
-        st.caption(f"Showing {len(shown)} of {len(ranked)} candidates in the pool.")
 
     for emp_id, reason in excluded_by_rule.items():
         emp = next(e for e in employees if e.employee_id == emp_id)
