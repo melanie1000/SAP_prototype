@@ -164,7 +164,7 @@ with tab_matches:
             default=[],
             format_func=lambda eid: f"{eid} — {id_to_name[eid]}",
         )
-        if st.button("Approve and write back"):
+        if st.button("Select and Approve"):
             result = apply_writeback(
                 employee_ids=selected,
                 position_id=position.position_id,
