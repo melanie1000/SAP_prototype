@@ -138,10 +138,9 @@ rule_target_start_date = (
     else NO_TIMING_CONSTRAINT
 )
 
-col_summary, col_matches = st.columns([1, 2])
+tab_matches, tab_summary = st.tabs(["Candidate Matches", "Summary"])
 
-with col_matches:
-    st.markdown("## Candidate Matches")
+with tab_matches:
     # Skill/timing criteria applied below come entirely from the rule you typed — the position
     # itself only contributes its role title and headcount, not a hidden skill/date requirement.
     position = positions["P001"].model_copy(update={
@@ -202,8 +201,7 @@ with col_matches:
             st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
         st.rerun()
 
-with col_summary:
-    st.markdown("## Summary")
+with tab_summary:
     total_matches = 0
     total_no_confident = 0
     for pos_id, base_position in positions.items():
