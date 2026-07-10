@@ -188,7 +188,7 @@ with col_matches:
 
     for emp_id, reason in excluded_by_rule.items():
         emp = next(e for e in employees if e.employee_id == emp_id)
-        st.warning(explain_exclusion(emp.name, reason))
+        st.error(explain_exclusion(emp.name, reason))
 
     st.subheader("Approve write-back")
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]

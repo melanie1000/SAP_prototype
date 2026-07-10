@@ -8,6 +8,30 @@ from src.models import Employee, ProjectAssignment
 
 load_dotenv()
 
+_KNOWN_CONDITION_PHRASES = {
+    ("intensity_flag", "high-travel"): "is currently on a high-travel assignment",
+    ("intensity_flag", "standard"): "is not currently on a high-travel assignment",
+    ("travel_preference", "opted_into_year_round_travel"): "has opted into year-round travel",
+    ("travel_preference", "standard"): "has not opted into year-round travel",
+}
+
+_KNOWN_NEGATED_CONDITION_PHRASES = {
+    ("travel_preference", "opted_into_year_round_travel"): "has not opted into year-round travel",
+    ("travel_preference", "standard"): "has opted into year-round travel",
+}
+
+
+def _describe_condition(field: str, value: str, negate: bool = False) -> str:
+    """Turns a field/value pair into a plain-language phrase for display to a non-technical audience."""
+    table = _KNOWN_NEGATED_CONDITION_PHRASES if negate else _KNOWN_CONDITION_PHRASES
+    if (field, value) in table:
+        return table[(field, value)]
+    if field == "department":
+        return f"{'is not in' if negate else 'is in'} the {value} department"
+    if field == "location":
+        return f"{'is not located' if negate else 'is located'} in {value}"
+    return f"{'does not have' if negate else 'has'} {field.replace('_', ' ')} set to {value!r}"
+
 SYSTEM_PROMPT = """You translate a People Ops planner's natural-language eligibility description into a \
 structured JSON filter. You only extract criteria — deterministic code applies them; you never decide \
 who is eligible yourself. The rule may describe required skills, an availability timeframe, and/or an \
@@ -75,8 +99,8 @@ def apply_filter(
             if unless and getattr(emp, unless["field"], None) == unless["equals"]:
                 continue
             excluded[emp.employee_id] = (
-                f"excluded by rule: {exclude_if['field']} == {exclude_if['equals']}"
-                + (f" (not overridden: {unless['field']} != {unless['equals']})" if unless else "")
+                _describe_condition(exclude_if["field"], exclude_if["equals"])
+                + (f" and {_describe_condition(unless['field'], unless['equals'], negate=True)}" if unless else "")
             )
     return excluded
 
