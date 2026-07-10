@@ -90,28 +90,29 @@ despite no matching project work in 18+ months (5 employees).
 
 The app is a single scrolling view, no tabs.
 
-1. **Summary banner** (top, under the title) — three live metrics: qualified-candidate count
-   vs. headcount, slots with no confident match, and an estimated cost-avoidance figure.
-   Computed before the input row renders, so it already reflects whatever rule and corrections
-   are currently active, and updates immediately as you edit the rule text below (no Save
-   required to see it move) or approve a bulk skill-tag correction.
-2. **Ask a question** (below the banner, left of a 3-column row) — a one-shot, read-only
+1. **Positions needed** (top, under the title) — a number input, defaulting to 10 (the mock
+   position's headcount), that overrides how many hires the banner below is capped at. It's the
+   first thing to set since everything below depends on it.
+2. **Summary banner** — three live metrics: qualified-candidate count vs. headcount, slots
+   with no confident match, and an estimated cost-avoidance figure. Computed before the input
+   row renders, so it already reflects whatever rule, headcount, and corrections are currently
+   active, and updates immediately as you edit the rule text below (no Save required to see it
+   move), change the headcount, or approve a bulk skill-tag correction.
+3. **Ask a question** (below the banner, left of a 3-column row) — a one-shot, read-only
    natural-language lookup against project history (e.g. "who worked on Project Falcon?").
    Never touches the persisted rule. Results render inside a collapsible expander, bucketed by
    current skill-tag state (`Skills: Rust`, `Skills: empty`, `Skills: other`), and a bulk "Add
    'Rust' skill tag to all N in this group" button lets a human approve corrections for an
    entire non-clean bucket at once, logged to the audit trail.
-3. **Eligibility rule** (middle column) — a free-text standing rule, e.g. "must know Rust, be
+4. **Eligibility rule** (middle column) — a free-text standing rule, e.g. "must know Rust, be
    available within 30 days, and not mind more travel." All eligibility criteria — required
    skills, timing, and travel tolerance — come entirely from what's typed here; nothing is
    pre-baked into the mock position data. Click Save to persist it; it's re-applied live as
-   corrections land. Below it, a "Positions needed" number input (defaults to 10, the mock
-   position's headcount) overrides how many hires the banner's cost figure is capped at —
-   handy for demoing how the cost figure responds once qualified candidates falls below it.
-4. **Approve candidate for re-deployment** (right column, next to Eligibility rule) — every
+   corrections land.
+5. **Approve candidate for re-deployment** (right column, next to Eligibility rule) — every
    eligible candidate, ranked best skills/tenure match first, requiring explicit selection
    before "Select and Approve" (nothing is pre-selected).
-5. **All candidates** (full-width section below the 3-column row) — every candidate in the
+6. **All candidates** (full-width section below the 3-column row) — every candidate in the
    pool, sorted by employee ID, each with a plain-language match or exclusion reason. A
    per-employee lookup box sits at the very bottom of the page.
 
