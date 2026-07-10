@@ -8,6 +8,12 @@ STREAMLIT_PID=$!
 trap "kill $STREAMLIT_PID 2>/dev/null" EXIT INT TERM
 
 sleep 2
-open -na "Google Chrome" --args --incognito "http://localhost:8501"
+osascript <<'EOF'
+tell application "Google Chrome"
+    activate
+    make new window with properties {mode:"incognito"}
+    set URL of active tab of front window to "http://localhost:8501"
+end tell
+EOF
 
 wait $STREAMLIT_PID
