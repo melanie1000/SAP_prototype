@@ -171,7 +171,7 @@ with tab_matches:
 
     st.subheader("Approve candidate for re-deployment")
     st.caption("Select from the eligible candidates. The list is ordered by best skills/tenure match.")
-    eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
+    eligible_ids = [r.employee_id for r in ranked if r.eligible]
     selected = st.multiselect(
         "Select employees to mark redeployed:",
         options=eligible_ids,
