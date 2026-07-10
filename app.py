@@ -19,6 +19,17 @@ DEFAULT_RULE = (
 )
 EXTERNAL_HIRE_BASELINE = 5_475  # SHRM 2025 Benchmarking Report, non-executive cost-per-hire (see README Sources)
 
+
+@st.cache_data(show_spinner="Interpreting rule...")
+def _cached_interpret_rule(text: str) -> dict:
+    return interpret_rule(text)
+
+
+@st.cache_data(show_spinner="Interpreting query...")
+def _cached_interpret_retrieval_query(text: str) -> dict:
+    return interpret_retrieval_query(text)
+
+
 init_db(RULE_DB)
 if get_active_rule(RULE_DB) is None:
     save_rule(RULE_DB, DEFAULT_RULE)
@@ -26,41 +37,66 @@ if get_active_rule(RULE_DB) is None:
 st.set_page_config(page_title="Redeployment Decision-Support Agent", layout="wide")
 st.title("Redeployment Decision-Support Agent — Rook Dynamics")
 
+if "P001" not in {p.position_id for p in load_open_positions()}:
+    st.error("Mock data is missing the expected critical position 'P001' — regenerate data/open_positions.json.")
+    st.stop()
+
 employees = load_employees()
 assignments = assignments_by_employee(load_project_assignments())
 positions = {p.position_id: p for p in load_open_positions()}
 
+# Excludes anyone already written back to a redeployment (from any earlier approval in this
+# session) so the same person can't be double-booked into a second position's candidate pool.
+available_employees = [e for e in employees if not e.redeployment_status]
+
+approver_name = st.text_input(
+    "Approved by (required before any write-back or skill-tag correction):",
+    value="", key="approver_name",
+)
+
 st.subheader("Step 1: One-shot lookup (not a persisted rule)")
 query_text = st.text_input("Ask a question about project history:", value="")
 if query_text and os.environ.get("ANTHROPIC_API_KEY"):
-    retrieval_filter = interpret_retrieval_query(query_text)
-    query_results = apply_retrieval_filter(retrieval_filter, employees)
+    try:
+        retrieval_filter = _cached_interpret_retrieval_query(query_text)
+    except Exception as e:
+        st.error(f"Couldn't interpret that query (API error): {e}")
+        retrieval_filter = {"project_name": None}
 
-    st.write(f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\":")
-    for emp in query_results:
-        has_clean_tag = has_required_skills(emp, ["Rust"])
-        if has_clean_tag:
-            st.write(f"- {emp.name} ({emp.employee_id}) — has Rust tag")
-        else:
-            st.warning(f"- {emp.name} ({emp.employee_id}) — missing/inconsistent Rust tag: {emp.skills}")
-            if st.button(f"Correct tag: add 'Rust' for {emp.name}", key=f"correct_{emp.employee_id}"):
-                correction = correct_skill_tag(
-                    employee_id=emp.employee_id,
-                    skill_to_add="Rust",
-                    approved_by=st.session_state.get("approver_name", "unspecified"),
-                )
-                if correction["result"] == "added":
-                    st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
-                    st.rerun()
-                elif correction["result"] == "already_present":
-                    st.info(f"{emp.name} already has the Rust tag — no change made.")
-                else:
-                    st.error(f"Could not find employee {emp.employee_id} — no change made.")
+    if retrieval_filter.get("error"):
+        st.error(f"Couldn't map that query to a project: {retrieval_filter['error']}")
+    else:
+        query_results = apply_retrieval_filter(retrieval_filter, employees)
+
+        st.write(f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\":")
+        for emp in query_results:
+            has_clean_tag = has_required_skills(emp, ["Rust"])
+            if has_clean_tag:
+                st.write(f"- {emp.name} ({emp.employee_id}) — has Rust tag")
+            else:
+                st.warning(f"- {emp.name} ({emp.employee_id}) — missing/inconsistent Rust tag: {emp.skills}")
+                if st.button(f"Correct tag: add 'Rust' for {emp.name}", key=f"correct_{emp.employee_id}"):
+                    if not approver_name.strip():
+                        st.error("Enter an approver name above before correcting a skill tag.")
+                    else:
+                        correction = correct_skill_tag(
+                            employee_id=emp.employee_id,
+                            skill_to_add="Rust",
+                            approved_by=approver_name.strip(),
+                        )
+                        if correction["result"] == "added":
+                            st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
+                            st.rerun()
+                        elif correction["result"] == "already_present":
+                            st.info(f"{emp.name} already has the Rust tag — no change made.")
+                        else:
+                            st.error(f"Could not find employee {emp.employee_id} — no change made.")
 elif query_text:
     st.warning("No ANTHROPIC_API_KEY found in .env — retrieval query will fail until it's set.")
 
 st.subheader("Eligibility rule")
 rule_text = st.text_area("Edit the standing rule (natural language):", value=get_active_rule(RULE_DB), height=100)
+st.caption("Shows a live preview against the text above as you type — click Save to persist it as the standing rule.")
 if st.button("Save & re-apply rule"):
     save_rule(RULE_DB, rule_text)
     st.rerun()
@@ -69,7 +105,14 @@ if not os.environ.get("ANTHROPIC_API_KEY"):
     st.warning("No ANTHROPIC_API_KEY found in .env — rule interpretation will fail until it's set.")
     filter_dict = {"exclude_if": None, "unless": None}
 else:
-    filter_dict = interpret_rule(rule_text)
+    try:
+        filter_dict = _cached_interpret_rule(rule_text)
+    except Exception as e:
+        st.error(f"Couldn't interpret the rule (API error): {e}")
+        filter_dict = {"exclude_if": None, "unless": None}
+
+if filter_dict.get("error"):
+    st.error(f"Couldn't map that rule to a filter: {filter_dict['error']}")
 
 excluded_by_rule = apply_filter(filter_dict, employees, assignments)
 
@@ -81,15 +124,18 @@ with tab1:
     st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}, "
              f"start by {position.target_start_date}")
 
-    eligible_pool = [e for e in employees if e.employee_id not in excluded_by_rule]
+    eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, position)
 
-    for r in ranked[:15]:
+    shown = ranked[:15]
+    for r in shown:
         emp = next(e for e in employees if e.employee_id == r.employee_id)
         if r.eligible:
             st.success(explain_match(emp.name, r.matched_skills, position.role_title, available=r.eligible))
         else:
             st.error(explain_exclusion(emp.name, r.reason))
+    if len(ranked) > len(shown):
+        st.caption(f"Showing {len(shown)} of {len(ranked)} candidates in the pool.")
 
     for emp_id, reason in excluded_by_rule.items():
         emp = next(e for e in employees if e.employee_id == emp_id)
@@ -98,25 +144,28 @@ with tab1:
     st.subheader("Approve write-back")
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
     selected = st.multiselect("Select employees to mark redeployed:", options=eligible_ids, default=eligible_ids)
-    approver = st.text_input("Approved by:", value="")
-    if st.button("Approve and write back") and approver:
-        result = apply_writeback(
-            employee_ids=selected,
-            position_id=position.position_id,
-            status="redeployed",
-            notes=f"Matched via rule: {rule_text}",
-            approved_by=approver,
-        )
-        st.success(f"Wrote back status for {len(result['updated'])} employees. See audit_log.jsonl.")
-        if result["not_found"]:
-            st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
+    if st.button("Approve and write back"):
+        if not approver_name.strip():
+            st.error("Enter an approver name above before writing back.")
+        else:
+            result = apply_writeback(
+                employee_ids=selected,
+                position_id=position.position_id,
+                status="redeployed",
+                notes=f"Matched via rule: {rule_text}",
+                approved_by=approver_name.strip(),
+            )
+            st.success(f"Wrote back status for {len(result['updated'])} employees. See audit_log.jsonl.")
+            if result["not_found"]:
+                st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
+            st.rerun()
 
 with tab2:
     st.markdown("**Part 2 demo:** apply the same rule set across all positions at once.")
     total_matches = 0
     total_no_confident = 0
     for pos_id, position in positions.items():
-        eligible_pool = [e for e in employees if e.employee_id not in excluded_by_rule]
+        eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
         ranked = rank_candidates(eligible_pool, assignments, position)
         eligible = [r for r in ranked if r.eligible]
         filled = min(len(eligible), position.headcount_needed)
@@ -125,6 +174,13 @@ with tab2:
         st.write(f"**{position.role_title}**: {len(eligible)} eligible candidates found, "
                  f"needs {position.headcount_needed} — "
                  f"{'no confident match for remainder' if len(eligible) < position.headcount_needed else 'fully covered'}")
+
+    st.caption(
+        "Each position's eligible count is computed independently and isn't deduplicated across "
+        "positions — a person eligible for two roles is counted in both until a write-back approval "
+        "removes them from the pool. Simultaneous/partial allocation across roles is out of scope "
+        "for this prototype (see README non-goals)."
+    )
 
     cost_avoidance = total_matches * EXTERNAL_HIRE_BASELINE * (4 - 1)  # 4x midpoint of cited 3-5x range
     st.metric("Total redeployment matches", total_matches)
