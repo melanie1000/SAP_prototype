@@ -105,7 +105,9 @@ The app is a single scrolling view, no tabs.
    available within 30 days, and not mind more travel." All eligibility criteria — required
    skills, timing, and travel tolerance — come entirely from what's typed here; nothing is
    pre-baked into the mock position data. Click Save to persist it; it's re-applied live as
-   corrections land.
+   corrections land. Below it, a "Positions needed" number input (defaults to 10, the mock
+   position's headcount) overrides how many hires the banner's cost figure is capped at —
+   handy for demoing how the cost figure responds once qualified candidates falls below it.
 4. **Approve candidate for re-deployment** (right column, next to Eligibility rule) — every
    eligible candidate, ranked best skills/tenure match first, requiring explicit selection
    before "Select and Approve" (nothing is pre-selected).
