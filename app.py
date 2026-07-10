@@ -53,7 +53,6 @@ col_question, col_rule = st.columns(2)
 def _apply_bulk_correction(people, group_label):
     for emp in people:
         correct_skill_tag(employee_id=emp.employee_id, skill_to_add="Rust", approved_by=APPROVER_NAME)
-    st.session_state["featured_employee_id"] = people[0].employee_id
     st.success(f"Corrected {len(people)} record(s) in the {group_label!r} group.")
     st.rerun()
 
