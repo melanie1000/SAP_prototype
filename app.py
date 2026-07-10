@@ -147,8 +147,6 @@ with tab_matches:
         "required_skills": rule_required_skills,
         "target_start_date": rule_target_start_date,
     })
-    st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}")
-
     eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, position)
 
