@@ -97,12 +97,13 @@ def interpret_retrieval_query(query_text: str, client: anthropic.Anthropic | Non
     return json.loads(text_block.text.strip())
 
 
-def apply_retrieval_filter(filter_dict: dict, employees: list) -> list:
+def apply_retrieval_filter(filter_dict: dict, employees: list[Employee]) -> list[Employee]:
     """Returns employees whose project_history contains a matching project_name. Read-only — never persists to rule_store."""
     project_name = filter_dict.get("project_name")
     if not project_name:
         return []
+    target = project_name.strip().lower()
     return [
         emp for emp in employees
-        if any(entry.project_name == project_name for entry in emp.project_history)
+        if any(entry.project_name.strip().lower() == target for entry in emp.project_history)
     ]

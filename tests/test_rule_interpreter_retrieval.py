@@ -27,3 +27,40 @@ def test_apply_retrieval_filter_returns_empty_when_no_match():
     non_matching = _employee_with_project("E0002", "Project Orion")
     results = apply_retrieval_filter({"project_name": "Project Falcon"}, [non_matching])
     assert results == []
+
+
+def test_apply_retrieval_filter_is_case_and_whitespace_insensitive():
+    matching = _employee_with_project("E0001", "Project Falcon")
+
+    results = apply_retrieval_filter({"project_name": "  project falcon  "}, [matching])
+
+    assert [e.employee_id for e in results] == ["E0001"]
+
+
+def test_apply_retrieval_filter_matches_one_of_multiple_history_entries():
+    emp = Employee(
+        employee_id="E0001", name="Test", current_title="SE", department="Eng",
+        skills=[], project_history=[
+            ProjectHistoryEntry(project_name="Project Orion", role="Engineer",
+                                 start_date="2025-01-01", end_date="2025-02-01"),
+            ProjectHistoryEntry(project_name="Project Falcon", role="Engineer",
+                                 start_date="2026-01-01", end_date="2026-02-01"),
+        ],
+        tenure_months=12, location="Austin", travel_preference="standard",
+    )
+
+    results = apply_retrieval_filter({"project_name": "Project Falcon"}, [emp])
+
+    assert [e.employee_id for e in results] == ["E0001"]
+
+
+def test_apply_retrieval_filter_handles_empty_project_history():
+    emp = Employee(
+        employee_id="E0001", name="Test", current_title="SE", department="Eng",
+        skills=[], project_history=[],
+        tenure_months=12, location="Austin", travel_preference="standard",
+    )
+
+    results = apply_retrieval_filter({"project_name": "Project Falcon"}, [emp])
+
+    assert results == []
