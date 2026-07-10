@@ -99,7 +99,7 @@ elif query_text:
 
 st.subheader("Eligibility rule")
 rule_text = st.text_area("Edit the standing rule (natural language):", value=get_active_rule(RULE_DB), height=100)
-st.caption("Shows a live preview against the text above as you type — click Save to persist it as the standing rule.")
+st.caption("Results below update live as you edit this text — click Save to make it the standing rule.")
 if st.button("Save & re-apply rule"):
     save_rule(RULE_DB, rule_text)
     st.rerun()
@@ -131,11 +131,7 @@ with tab1:
     ranked = rank_candidates(eligible_pool, assignments, position)
 
     st.subheader("Featured candidate")
-    st.caption(
-        "Look up any one person's status directly, regardless of where they rank in the list "
-        "below — useful for tracking a specific person (e.g. someone just corrected in Step 1) "
-        "who may not be in the top slice shown further down."
-    )
+    st.caption("Look up any person's status directly, regardless of where they rank in the list below.")
     id_to_name = {e.employee_id: e.name for e in employees}
     featured_id = st.selectbox(
         "Employee ID:",
@@ -203,8 +199,8 @@ with tab2:
     st.caption(
         "Each position's eligible count is computed independently and isn't deduplicated across "
         "positions — a person eligible for two roles is counted in both until a write-back approval "
-        "removes them from the pool. Simultaneous/partial allocation across roles is out of scope "
-        "for this prototype (see README non-goals)."
+        "removes them from the pool. Each write-back assigns a person fully to one position; the "
+        "tool doesn't split anyone's time across multiple roles at once."
     )
 
     MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
