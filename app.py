@@ -32,7 +32,7 @@ if get_active_rule(RULE_DB) is None:
     save_rule(RULE_DB, DEFAULT_RULE)
 
 st.set_page_config(page_title="Redeployment Decision-Support Agent", layout="wide")
-st.title("Redeployment Decision-Support Agent — Rook Dynamics")
+st.title("Redeployment Decision-Support Agent")
 
 if "P001" not in {p.position_id for p in load_open_positions()}:
     st.error("Mock data is missing the expected critical position 'P001' — regenerate data/open_positions.json.")
