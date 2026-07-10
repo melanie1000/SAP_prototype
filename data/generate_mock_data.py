@@ -156,7 +156,7 @@ def build_open_positions():
     return [
         {
             "position_id": "P001",
-            "role_title": "Rust Systems Engineer — Project Falcon (Critical Redeployment)",
+            "role_title": "Rust Systems Engineer — Project Tiger (Critical Redeployment)",
             "required_skills": ["Rust"],
             "urgency": "high",
             "target_start_date": CRITICAL_START.isoformat(),
