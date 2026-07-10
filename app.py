@@ -214,4 +214,4 @@ with tab_summary:
     cost_avoidance = fillable_slots * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier; capped since you can only fill the open slots
     st.metric("Qualified candidates", f"{total_matches} for {summary_position.headcount_needed} positions")
     st.metric("Slots with no confident match", total_no_confident)
-    st.metric("Estimated cost avoidance (illustrative)", f"${cost_avoidance:,.0f}")
+    st.metric("Cost savings", f"${cost_avoidance:,.0f}")
