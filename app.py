@@ -113,7 +113,7 @@ with st.container(border=True):
     st.caption("This value represents the savings from redeploying internal hires versus hiring new employees for the project. "
                "Updates live as the rule and candidate corrections below change.")
 
-col_question, col_rule = st.columns(2)
+col_question, col_rule, col_approve = st.columns(3)
 
 def _apply_bulk_correction(people, group_label):
     for emp in people:
@@ -181,25 +181,6 @@ with col_rule:
         level, msg = rule_interpretation_message
         getattr(st, level)(msg)
 
-col_all, col_approve = st.columns(2)
-
-with col_all:
-    st.subheader("All candidates")
-    # Displayed in employee-ID order for easy scanning against the golden set — the
-    # underlying `ranked` order (best skills/tenure match first) still drives which
-    # eligible people get offered in the write-back selector to the right.
-    for r in sorted(ranked, key=lambda r: r.employee_id):
-        emp = next(e for e in employees if e.employee_id == r.employee_id)
-        emp_label = f"{emp.name} ({emp.employee_id})"
-        if r.eligible:
-            st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
-        else:
-            st.error(explain_exclusion(emp_label, r.reason))
-
-    for emp_id, reason in sorted(excluded_by_rule.items()):
-        emp = next(e for e in employees if e.employee_id == emp_id)
-        st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
-
 with col_approve:
     st.subheader("Approve candidate for re-deployment")
     st.caption("Select from the eligible candidates. The list is ordered by best skills/tenure match.")
@@ -223,7 +204,23 @@ with col_approve:
             st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
         st.rerun()
 
-st.caption("Look up any person's status directly, regardless of where they rank in the lists above.")
+st.subheader("All candidates")
+# Displayed in employee-ID order for easy scanning against the golden set — the underlying
+# `ranked` order (best skills/tenure match first) still drives which eligible people get
+# offered in the Approve candidate for re-deployment selector above.
+for r in sorted(ranked, key=lambda r: r.employee_id):
+    emp = next(e for e in employees if e.employee_id == r.employee_id)
+    emp_label = f"{emp.name} ({emp.employee_id})"
+    if r.eligible:
+        st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
+    else:
+        st.error(explain_exclusion(emp_label, r.reason))
+
+for emp_id, reason in sorted(excluded_by_rule.items()):
+    emp = next(e for e in employees if e.employee_id == emp_id)
+    st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
+
+st.caption("Look up any person's status directly, regardless of where they rank in the list above.")
 featured_id = st.selectbox(
     "Employee ID:",
     options=[None] + sorted(id_to_name),
