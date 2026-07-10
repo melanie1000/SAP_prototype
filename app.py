@@ -215,13 +215,3 @@ with tab_summary:
     st.metric("Qualified candidates", f"{total_matches} for {summary_position.headcount_needed} positions")
     st.metric("Slots with no confident match", total_no_confident)
     st.metric("Estimated cost avoidance (illustrative)", f"${cost_avoidance:,.0f}")
-    st.caption(
-        f"Assumes ${EXTERNAL_HIRE_BASELINE:,} non-executive cost-per-hire baseline (SHRM 2025 "
-        f"Benchmarking Report). If an external hire costs {MULTIPLIER_MIDPOINT}x the baseline "
-        "(midpoint of the cited 3-5x range, Josh Bersin Company 2023 — see README Sources) and an "
-        f"internal redeployment costs roughly 1x, the avoided cost per match is the {MULTIPLIER_MIDPOINT - 1}x "
-        "difference, not the full multiplier. This baseline is also an across-industry, "
-        "across-role-type average — a specialized technical hire (Rust engineer) likely costs more "
-        "once longer sourcing/vetting time is factored in. Treat this as a conservative estimate, "
-        "not a precise figure for this role type."
-    )
