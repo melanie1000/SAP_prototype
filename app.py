@@ -38,6 +38,7 @@ init_db(RULE_DB)
 
 st.set_page_config(page_title="Redeployment Decision-Support Agent", layout="wide")
 st.title("Redeployment Decision-Support Agent")
+st.number_input("Positions needed:", min_value=1, step=1, value=DEFAULT_HEADCOUNT, key=HEADCOUNT_KEY)
 
 if "P001" not in {p.position_id for p in load_open_positions()}:
     st.error("Mock data is missing the expected critical position 'P001' — regenerate data/open_positions.json.")
@@ -57,8 +58,8 @@ available_employees = [e for e in employees if not e.redeployment_status]
 # the very first default.
 rule_text = st.session_state.get(RULE_TEXT_KEY, get_active_rule(RULE_DB) or "")
 
-# Same pre-read pattern for the headcount number_input below, so the banner reflects it too.
-headcount_needed = st.session_state.get(HEADCOUNT_KEY, DEFAULT_HEADCOUNT)
+# headcount_needed was already captured directly from the number_input above the title check.
+headcount_needed = st.session_state[HEADCOUNT_KEY]
 
 # (level, message) to display near the rule box once it's rendered, rather than up here.
 rule_interpretation_message = None
@@ -186,7 +187,6 @@ with col_rule:
     if rule_interpretation_message:
         level, msg = rule_interpretation_message
         getattr(st, level)(msg)
-    st.number_input("Positions needed:", min_value=1, step=1, value=headcount_needed, key=HEADCOUNT_KEY)
 
 with col_approve:
     st.subheader("Approve candidate for re-deployment")
