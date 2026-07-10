@@ -215,3 +215,4 @@ with tab_summary:
     st.metric("Qualified candidates", f"{total_matches} for {summary_position.headcount_needed} positions")
     st.metric("Slots with no confident match", total_no_confident)
     st.metric("Cost savings", f"${cost_avoidance:,.0f}")
+    st.caption("The gap between hiring these people externally vs. redeploying them internally — not the cost of hiring them.")
