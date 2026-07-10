@@ -88,24 +88,25 @@ despite no matching project work in 18+ months (5 employees).
 
 ## Demo flow
 
-The app has two side-by-side boxes at the top, plus a Candidate Matches / Summary tab pair
-below them.
+The app is a single scrolling view, no tabs.
 
-1. **Ask a question** (left box) — a one-shot, read-only natural-language lookup against
+1. **Ask a question** (top-left box) — a one-shot, read-only natural-language lookup against
    project history (e.g. "who worked on Project Falcon?"). Never touches the persisted rule.
    Results are bucketed by current skill-tag state (`Skills: Rust`, `Skills: empty`,
    `Skills: other`), and a bulk "Add 'Rust' skill tag to all N in this group" button lets a
    human approve corrections for an entire non-clean bucket at once, logged to the audit trail.
-2. **Eligibility rule** (right box) — a free-text standing rule, e.g. "must know Rust, be
+2. **Eligibility rule** (top-right box) — a free-text standing rule, e.g. "must know Rust, be
    available within 30 days, and not mind more travel." All eligibility criteria — required
    skills, timing, and travel tolerance — come entirely from what's typed here; nothing is
    pre-baked into the mock position data. Click Save to persist it; it's re-applied live as
    corrections land.
-3. **Candidate Matches / Summary tabs** — Candidate Matches lists every candidate with a
-   plain-language match or exclusion reason, a per-employee lookup, and an "Approve
-   write-back" step requiring explicit selection (nothing is pre-selected). Summary shows
-   qualified-candidate count vs. headcount, slots with no confident match, and an estimated
-   cost-avoidance figure.
+3. **Approve candidate for re-deployment** (below, left column) — every eligible candidate,
+   ranked best skills/tenure match first, requiring explicit selection before "Select and
+   Approve" (nothing is pre-selected). Directly below it: qualified-candidate count vs.
+   headcount, slots with no confident match, and an estimated cost-avoidance figure.
+4. **All candidates** (below, right column, adjacent to the above) — every candidate in the
+   pool, sorted by employee ID, each with a plain-language match or exclusion reason. A
+   per-employee lookup box sits at the very bottom of the page.
 
 ## Evaluation
 
@@ -133,21 +134,21 @@ mislead, and a credible eval should be able to explain, not just report, its own
 
 ## Assumptions and tradeoffs
 
-The Summary tab's cost-avoidance estimate is: `fillable slots × $5,475 baseline (SHRM 2025
-Benchmarking Report) × 3`, where "fillable slots" is the qualified-candidate count capped at
-the position's headcount (you can only fill the open slots), and 3 is the *marginal* savings
+The cost-avoidance estimate is: `fillable slots × $5,475 baseline (SHRM 2025 Benchmarking
+Report) × 3`, where "fillable slots" is the qualified-candidate count capped at the
+position's headcount (you can only fill the open slots), and 3 is the *marginal* savings
 implied by the cited 3-5x external-hire-cost multiplier (midpoint 4x) — i.e. if an external
 hire costs 4x the baseline and an internal redeployment costs roughly 1x the baseline, the
 amount actually *avoided* by redeploying is the difference, `(4 - 1) = 3` times the baseline,
-not the full 4x. The qualified-candidate count itself is shown uncapped elsewhere on the tab
+not the full 4x. The qualified-candidate count itself is shown uncapped alongside it
 ("Qualified candidates: N for M positions") so a true count above headcount isn't hidden.
 This baseline is also an across-industry, across-role-type average — a specialized technical
 hire (Rust engineer) likely costs more once longer sourcing/vetting time is factored in.
 Treat the resulting figure as a conservative estimate, not a precise one for this specific
 role type.
 
-The Summary tab is scoped to the one open position (P001) the demo's eligibility rule is
-about — it does not aggregate or deduplicate across multiple positions.
+These metrics are scoped to the one open position (P001) the demo's eligibility rule is
+about — they do not aggregate or deduplicate across multiple positions.
 
 ## Non-goals (explicit scope boundaries)
 

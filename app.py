@@ -138,97 +138,85 @@ rule_target_start_date = (
     else NO_TIMING_CONSTRAINT
 )
 
-tab_matches, tab_summary = st.tabs(["Candidate Matches", "Summary"])
+# Skill/timing criteria applied below come entirely from the rule you typed — the position
+# itself only contributes its role title and headcount, not a hidden skill/date requirement.
+position = positions["P001"].model_copy(update={
+    "required_skills": rule_required_skills,
+    "target_start_date": rule_target_start_date,
+})
+eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
+ranked = rank_candidates(eligible_pool, assignments, position)
+eligible = [r for r in ranked if r.eligible]
 
-with tab_matches:
-    # Skill/timing criteria applied below come entirely from the rule you typed — the position
-    # itself only contributes its role title and headcount, not a hidden skill/date requirement.
-    position = positions["P001"].model_copy(update={
-        "required_skills": rule_required_skills,
-        "target_start_date": rule_target_start_date,
-    })
-    eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
-    ranked = rank_candidates(eligible_pool, assignments, position)
+id_to_name = {e.employee_id: e.name for e in employees}
 
-    id_to_name = {e.employee_id: e.name for e in employees}
+col_approve, col_all = st.columns(2)
 
-    col_approve, col_all = st.columns(2)
-
-    with col_approve:
-        st.subheader("Approve candidate for re-deployment")
-        st.caption("Select from the eligible candidates. The list is ordered by best skills/tenure match.")
-        eligible_ids = [r.employee_id for r in ranked if r.eligible]
-        selected = st.multiselect(
-            "Select employees to mark redeployed:",
-            options=eligible_ids,
-            default=[],
-            format_func=lambda eid: f"{eid} — {id_to_name[eid]}",
-        )
-        if st.button("Select and Approve"):
-            result = apply_writeback(
-                employee_ids=selected,
-                position_id=position.position_id,
-                status="redeployed",
-                notes=f"Matched via rule: {rule_text}",
-                approved_by=APPROVER_NAME,
-            )
-            st.success(f"Wrote back status for {len(result['updated'])} employees. See audit_log.jsonl.")
-            if result["not_found"]:
-                st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
-            st.rerun()
-
-    with col_all:
-        st.subheader("All candidates")
-        # Displayed in employee-ID order for easy scanning against the golden set — the
-        # underlying `ranked` order (best skills/tenure match first) still drives which
-        # eligible people get offered in the write-back selector to the left.
-        for r in sorted(ranked, key=lambda r: r.employee_id):
-            emp = next(e for e in employees if e.employee_id == r.employee_id)
-            emp_label = f"{emp.name} ({emp.employee_id})"
-            if r.eligible:
-                st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
-            else:
-                st.error(explain_exclusion(emp_label, r.reason))
-
-        for emp_id, reason in sorted(excluded_by_rule.items()):
-            emp = next(e for e in employees if e.employee_id == emp_id)
-            st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
-
-    st.caption("Look up any person's status directly, regardless of where they rank in the lists above.")
-    featured_id = st.selectbox(
-        "Employee ID:",
-        options=[None] + sorted(id_to_name),
-        format_func=lambda eid: "— Select an employee —" if eid is None else f"{eid} — {id_to_name[eid]}",
-        key="featured_employee_id",
+with col_approve:
+    st.subheader("Approve candidate for re-deployment")
+    st.caption("Select from the eligible candidates. The list is ordered by best skills/tenure match.")
+    eligible_ids = [r.employee_id for r in eligible]
+    selected = st.multiselect(
+        "Select employees to mark redeployed:",
+        options=eligible_ids,
+        default=[],
+        format_func=lambda eid: f"{eid} — {id_to_name[eid]}",
     )
-    if featured_id is not None:
-        featured_label = f"{id_to_name[featured_id]} ({featured_id})"
-        featured_score = next((r for r in ranked if r.employee_id == featured_id), None)
-        if featured_score is None:
-            st.info(f"{featured_label} is excluded by the persisted rule "
-                    f"(see the exclusions listed above) or not currently in the redeployment pool.")
-        elif featured_score.eligible:
-            st.success(explain_match(featured_label, featured_score.matched_skills, position.role_title, available=True))
-        else:
-            st.error(explain_exclusion(featured_label, featured_score.reason))
+    if st.button("Select and Approve"):
+        result = apply_writeback(
+            employee_ids=selected,
+            position_id=position.position_id,
+            status="redeployed",
+            notes=f"Matched via rule: {rule_text}",
+            approved_by=APPROVER_NAME,
+        )
+        st.success(f"Wrote back status for {len(result['updated'])} employees. See audit_log.jsonl.")
+        if result["not_found"]:
+            st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
+        st.rerun()
 
-with tab_summary:
-    # Scoped to P001 only — the position this rule is actually about, using the same
-    # rule-derived skill/timing criteria as the Candidate Matches column.
-    summary_position = positions["P001"].model_copy(update={
-        "required_skills": rule_required_skills,
-        "target_start_date": rule_target_start_date,
-    })
-    eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
-    ranked = rank_candidates(eligible_pool, assignments, summary_position)
-    eligible = [r for r in ranked if r.eligible]
     total_matches = len(eligible)  # everyone who matches the criteria, not capped to headcount
-    fillable_slots = min(total_matches, summary_position.headcount_needed)  # capped, for cost math below
-    total_no_confident = max(0, summary_position.headcount_needed - total_matches)
+    fillable_slots = min(total_matches, position.headcount_needed)  # capped, for cost math below
+    total_no_confident = max(0, position.headcount_needed - total_matches)
 
     MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
     cost_avoidance = fillable_slots * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier; capped since you can only fill the open slots
-    st.metric("Qualified candidates", f"{total_matches} for {summary_position.headcount_needed} positions")
+    st.metric("Qualified candidates", f"{total_matches} for {position.headcount_needed} positions")
     st.metric("Slots with no confident match", total_no_confident)
     st.metric("Cost savings", f"${cost_avoidance:,.0f}")
     st.caption("This value represents the savings from redeploying internal hires versus hiring new employees for the project.")
+
+with col_all:
+    st.subheader("All candidates")
+    # Displayed in employee-ID order for easy scanning against the golden set — the
+    # underlying `ranked` order (best skills/tenure match first) still drives which
+    # eligible people get offered in the write-back selector to the left.
+    for r in sorted(ranked, key=lambda r: r.employee_id):
+        emp = next(e for e in employees if e.employee_id == r.employee_id)
+        emp_label = f"{emp.name} ({emp.employee_id})"
+        if r.eligible:
+            st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
+        else:
+            st.error(explain_exclusion(emp_label, r.reason))
+
+    for emp_id, reason in sorted(excluded_by_rule.items()):
+        emp = next(e for e in employees if e.employee_id == emp_id)
+        st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
+
+st.caption("Look up any person's status directly, regardless of where they rank in the lists above.")
+featured_id = st.selectbox(
+    "Employee ID:",
+    options=[None] + sorted(id_to_name),
+    format_func=lambda eid: "— Select an employee —" if eid is None else f"{eid} — {id_to_name[eid]}",
+    key="featured_employee_id",
+)
+if featured_id is not None:
+    featured_label = f"{id_to_name[featured_id]} ({featured_id})"
+    featured_score = next((r for r in ranked if r.employee_id == featured_id), None)
+    if featured_score is None:
+        st.info(f"{featured_label} is excluded by the persisted rule "
+                f"(see the exclusions listed above) or not currently in the redeployment pool.")
+    elif featured_score.eligible:
+        st.success(explain_match(featured_label, featured_score.matched_skills, position.role_title, available=True))
+    else:
+        st.error(explain_exclusion(featured_label, featured_score.reason))
