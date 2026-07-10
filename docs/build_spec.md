@@ -2,6 +2,13 @@
 **For:** SAP FDPM take-home exercise
 **Stack:** Claude Code's choice — not prescribed; only behavior is prescribed
 
+> **Frozen pre-build artifact.** This is the plan as written *before* implementation, kept
+> as-is for the design trail — it does not track what was actually built. For the as-built
+> system, current eval results, and how to run it, see [README.md](../README.md). Where the
+> two diverge (e.g. the non-goals list gained a 4th item — no staleness-checking on skill
+> tags — discovered during the build), that's expected: this document records intent, the
+> README records outcome.
+
 ---
 
 ## simplified thesis
