@@ -19,6 +19,7 @@ APPROVER_NAME = "Melanie F., Workforce Planning"  # stands in for the authentica
 TODAY = date(2026, 7, 9)  # fixed reference date the mock dataset's dates are calibrated against
 NO_TIMING_CONSTRAINT = "2099-12-31"  # used when the rule doesn't mention an availability window
 EMPTY_FILTER = {"required_skills": [], "available_within_days": None, "exclude_if": None, "unless": None}
+RULE_TEXT_KEY = "rule_text_input"  # shared key: lets us read the live rule text before the text_area widget renders
 
 
 @st.cache_data(show_spinner="Interpreting rule...")
@@ -47,6 +48,70 @@ positions = {p.position_id: p for p in load_open_positions()}
 # Excludes anyone already written back to a redeployment (from any earlier approval in this
 # session) so the same person can't be double-booked into a second position's candidate pool.
 available_employees = [e for e in employees if not e.redeployment_status]
+
+# Read the rule text before the text_area widget below renders it, so the banner metrics can
+# be computed and displayed above the input row. `st.session_state[RULE_TEXT_KEY]` reflects the
+# widget's current value once it has rendered at least once; the persisted rule is only used as
+# the very first default.
+rule_text = st.session_state.get(RULE_TEXT_KEY, get_active_rule(RULE_DB) or "")
+
+# (level, message) to display near the rule box once it's rendered, rather than up here.
+rule_interpretation_message = None
+
+if not rule_text.strip():
+    filter_dict = dict(EMPTY_FILTER)
+elif not os.environ.get("ANTHROPIC_API_KEY"):
+    filter_dict = dict(EMPTY_FILTER)
+    rule_interpretation_message = ("warning", "No ANTHROPIC_API_KEY found in .env — rule interpretation will fail until it's set.")
+else:
+    try:
+        filter_dict = _cached_interpret_rule(rule_text)
+    except Exception as e:
+        filter_dict = dict(EMPTY_FILTER)
+        rule_interpretation_message = ("error", f"Couldn't interpret the rule (API error): {e}")
+
+if filter_dict.get("error"):
+    rule_interpretation_message = ("error", f"Couldn't map that rule to a filter: {filter_dict['error']}")
+
+excluded_by_rule = apply_filter(filter_dict, employees, assignments)
+
+# Skill and availability criteria come entirely from what was typed into the rule box below —
+# nothing is pre-set on the position itself. Empty/unspecified means "no constraint on that
+# dimension yet," not "use some hidden default."
+rule_required_skills = filter_dict.get("required_skills") or []
+rule_available_within_days = filter_dict.get("available_within_days")
+rule_target_start_date = (
+    (TODAY + timedelta(days=rule_available_within_days)).isoformat()
+    if rule_available_within_days is not None
+    else NO_TIMING_CONSTRAINT
+)
+
+# Skill/timing criteria applied below come entirely from the rule you typed — the position
+# itself only contributes its role title and headcount, not a hidden skill/date requirement.
+position = positions["P001"].model_copy(update={
+    "required_skills": rule_required_skills,
+    "target_start_date": rule_target_start_date,
+})
+eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
+ranked = rank_candidates(eligible_pool, assignments, position)
+eligible = [r for r in ranked if r.eligible]
+
+id_to_name = {e.employee_id: e.name for e in employees}
+
+total_matches = len(eligible)  # everyone who matches the criteria, not capped to headcount
+fillable_slots = min(total_matches, position.headcount_needed)  # capped, for cost math below
+total_no_confident = max(0, position.headcount_needed - total_matches)
+
+MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
+cost_avoidance = fillable_slots * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier; capped since you can only fill the open slots
+
+with st.container(border=True):
+    banner_col1, banner_col2, banner_col3 = st.columns(3)
+    banner_col1.metric("Qualified candidates", f"{total_matches} for {position.headcount_needed} positions")
+    banner_col2.metric("Slots with no confident match", total_no_confident)
+    banner_col3.metric("Cost savings", f"${cost_avoidance:,.0f}")
+    st.caption("This value represents the savings from redeploying internal hires versus hiring new employees for the project. "
+               "Updates live as the rule and candidate corrections below change.")
 
 col_question, col_rule = st.columns(2)
 
@@ -107,51 +172,14 @@ with col_question:
 
 with col_rule:
     st.subheader("Eligibility rule")
-    rule_text = st.text_area("Edit the standing rule (natural language):", value=get_active_rule(RULE_DB) or "", height=100)
-    st.caption("Results below update live as you edit this text — click Save to make it the standing rule.")
+    st.text_area("Edit the standing rule (natural language):", value=rule_text, height=100, key=RULE_TEXT_KEY)
+    st.caption("The banner above and results below update live as you edit this text — click Save to make it the standing rule.")
     if st.button("Save & re-apply rule"):
         save_rule(RULE_DB, rule_text)
         st.rerun()
-
-if not rule_text.strip():
-    filter_dict = dict(EMPTY_FILTER)
-elif not os.environ.get("ANTHROPIC_API_KEY"):
-    st.warning("No ANTHROPIC_API_KEY found in .env — rule interpretation will fail until it's set.")
-    filter_dict = dict(EMPTY_FILTER)
-else:
-    try:
-        filter_dict = _cached_interpret_rule(rule_text)
-    except Exception as e:
-        st.error(f"Couldn't interpret the rule (API error): {e}")
-        filter_dict = dict(EMPTY_FILTER)
-
-if filter_dict.get("error"):
-    st.error(f"Couldn't map that rule to a filter: {filter_dict['error']}")
-
-excluded_by_rule = apply_filter(filter_dict, employees, assignments)
-
-# Skill and availability criteria come entirely from what was typed into the rule box above —
-# nothing is pre-set on the position itself. Empty/unspecified means "no constraint on that
-# dimension yet," not "use some hidden default."
-rule_required_skills = filter_dict.get("required_skills") or []
-rule_available_within_days = filter_dict.get("available_within_days")
-rule_target_start_date = (
-    (TODAY + timedelta(days=rule_available_within_days)).isoformat()
-    if rule_available_within_days is not None
-    else NO_TIMING_CONSTRAINT
-)
-
-# Skill/timing criteria applied below come entirely from the rule you typed — the position
-# itself only contributes its role title and headcount, not a hidden skill/date requirement.
-position = positions["P001"].model_copy(update={
-    "required_skills": rule_required_skills,
-    "target_start_date": rule_target_start_date,
-})
-eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
-ranked = rank_candidates(eligible_pool, assignments, position)
-eligible = [r for r in ranked if r.eligible]
-
-id_to_name = {e.employee_id: e.name for e in employees}
+    if rule_interpretation_message:
+        level, msg = rule_interpretation_message
+        getattr(st, level)(msg)
 
 col_all, col_approve = st.columns(2)
 
@@ -194,17 +222,6 @@ with col_approve:
         if result["not_found"]:
             st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
         st.rerun()
-
-    total_matches = len(eligible)  # everyone who matches the criteria, not capped to headcount
-    fillable_slots = min(total_matches, position.headcount_needed)  # capped, for cost math below
-    total_no_confident = max(0, position.headcount_needed - total_matches)
-
-    MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
-    cost_avoidance = fillable_slots * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier; capped since you can only fill the open slots
-    st.metric("Qualified candidates", f"{total_matches} for {position.headcount_needed} positions")
-    st.metric("Slots with no confident match", total_no_confident)
-    st.metric("Cost savings", f"${cost_avoidance:,.0f}")
-    st.caption("This value represents the savings from redeploying internal hires versus hiring new employees for the project.")
 
 st.caption("Look up any person's status directly, regardless of where they rank in the lists above.")
 featured_id = st.selectbox(
