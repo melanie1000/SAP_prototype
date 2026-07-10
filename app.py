@@ -222,12 +222,6 @@ with tab_summary:
                  f"needs {position.headcount_needed} — "
                  f"{'no confident match for remainder' if len(eligible) < position.headcount_needed else 'fully covered'}")
 
-    st.caption(
-        "Each position's eligible count is computed independently and isn't deduplicated across "
-        "positions — a person eligible for two roles is counted in both until a write-back approval "
-        "removes them from the pool. Each write-back assigns a person fully to one position; the "
-        "tool doesn't split anyone's time across multiple roles at once."
-    )
 
     MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
     cost_avoidance = total_matches * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier
