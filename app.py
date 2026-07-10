@@ -169,7 +169,7 @@ with tab_matches:
         else:
             st.error(explain_exclusion(featured_label, featured_score.reason))
 
-    st.subheader("Approve write-back")
+    st.subheader("Approve candidate for re-deployment")
     st.caption("Select from the top-ranked eligible candidates (best skills/tenure match first) and click "
                "Approve to mark them redeployed — nothing is written until you do.")
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
