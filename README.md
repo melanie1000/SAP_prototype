@@ -169,6 +169,10 @@ about — they do not aggregate or deduplicate across multiple positions.
   regardless. A production system would need to validate skill tags against recency of use,
   not just presence.
 
+For a fuller punch list of what an engineering team would need to build before this touches
+real employee data — auth, real EC integration, LLM governance, audit/compliance, scale — see
+[docs/production_notes.md](docs/production_notes.md).
+
 ## Running it
 
 Requires Python 3.10+ and your own Anthropic API key (get one at
