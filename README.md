@@ -88,13 +88,24 @@ despite no matching project work in 18+ months (5 employees).
 
 ## Demo flow
 
-1. **One-shot lookup** — ask a natural-language question about project history (e.g. "show
-   me everyone who worked on Project Falcon"). This is read-only and never touches the
-   persisted rule store.
-2. **Flag and correct** — the lookup surfaces people with missing or inconsistently-spelled
-   skill tags; a human can approve a one-tag correction, logged to the audit trail.
-3. **Re-run the persisted rule** — the standing eligibility rule box re-applies live, and
-   corrected people now flow through as skill-eligible, without any code changes.
+The app has two side-by-side boxes at the top, plus a Candidate Matches / Summary tab pair
+below them.
+
+1. **Ask a question** (left box) — a one-shot, read-only natural-language lookup against
+   project history (e.g. "who worked on Project Falcon?"). Never touches the persisted rule.
+   Results are bucketed by current skill-tag state (`Skills: Rust`, `Skills: empty`,
+   `Skills: other`), and a bulk "Add 'Rust' skill tag to all N in this group" button lets a
+   human approve corrections for an entire non-clean bucket at once, logged to the audit trail.
+2. **Eligibility rule** (right box) — a free-text standing rule, e.g. "must know Rust, be
+   available within 30 days, and not mind more travel." All eligibility criteria — required
+   skills, timing, and travel tolerance — come entirely from what's typed here; nothing is
+   pre-baked into the mock position data. Click Save to persist it; it's re-applied live as
+   corrections land.
+3. **Candidate Matches / Summary tabs** — Candidate Matches lists every candidate with a
+   plain-language match or exclusion reason, a per-employee lookup, and an "Approve
+   write-back" step requiring explicit selection (nothing is pre-selected). Summary shows
+   qualified-candidate count vs. headcount, slots with no confident match, and an estimated
+   cost-avoidance figure.
 
 ## Evaluation
 
@@ -122,20 +133,21 @@ mislead, and a credible eval should be able to explain, not just report, its own
 
 ## Assumptions and tradeoffs
 
-The scale view's cost-avoidance estimate is: `matches × $5,475 baseline (SHRM 2025
-Benchmarking Report) × 3`, where 3 is the *marginal* savings implied by the cited 3-5x
-external-hire-cost multiplier (midpoint 4x) — i.e. if an external hire costs 4x the
-baseline and an internal redeployment costs roughly 1x the baseline, the amount actually
-*avoided* by redeploying is the difference, `(4 - 1) = 3` times the baseline, not the full
-4x. This baseline is also an across-industry, across-role-type average — a specialized
-technical hire (Rust engineer) likely costs more once longer sourcing/vetting time is
-factored in. Treat the resulting figure as a conservative estimate, not a precise one for
-this specific role type.
+The Summary tab's cost-avoidance estimate is: `fillable slots × $5,475 baseline (SHRM 2025
+Benchmarking Report) × 3`, where "fillable slots" is the qualified-candidate count capped at
+the position's headcount (you can only fill the open slots), and 3 is the *marginal* savings
+implied by the cited 3-5x external-hire-cost multiplier (midpoint 4x) — i.e. if an external
+hire costs 4x the baseline and an internal redeployment costs roughly 1x the baseline, the
+amount actually *avoided* by redeploying is the difference, `(4 - 1) = 3` times the baseline,
+not the full 4x. The qualified-candidate count itself is shown uncapped elsewhere on the tab
+("Qualified candidates: N for M positions") so a true count above headcount isn't hidden.
+This baseline is also an across-industry, across-role-type average — a specialized technical
+hire (Rust engineer) likely costs more once longer sourcing/vetting time is factored in.
+Treat the resulting figure as a conservative estimate, not a precise one for this specific
+role type.
 
-The scale view's per-position eligible counts are not deduplicated across positions — a
-person eligible for two roles is counted in both until a write-back approval removes them
-from the candidate pool. Simultaneous/partial allocation across roles is out of scope for
-this prototype.
+The Summary tab is scoped to the one open position (P001) the demo's eligibility rule is
+about — it does not aggregate or deduplicate across multiple positions.
 
 ## Non-goals (explicit scope boundaries)
 
@@ -150,19 +162,29 @@ this prototype.
 
 ## Running it
 
-Requires Python 3.10+.
+Requires Python 3.10+ and your own Anthropic API key (get one at
+[console.anthropic.com](https://console.anthropic.com/) — the app runs and the deterministic
+scorer/data views work without one, but the two LLM-backed features (the persisted
+eligibility rule and the one-shot retrieval query) require it, and degrade to a warning
+message rather than crashing if it's missing).
+
+**First-time setup:**
 
 1. Create a virtual environment and install dependencies:
    ```
    python3 -m venv venv
    ./venv/bin/pip install -r requirements.txt
    ```
-2. Copy `.env.example` to `.env` and add your `ANTHROPIC_API_KEY`. The app runs and the
-   deterministic scorer/data views work without a key — only the two LLM-backed features
-   (the persisted eligibility rule and the one-shot retrieval query) require it, and degrade
-   to a warning message rather than crashing if it's missing.
-3. `./venv/bin/python data/generate_mock_data.py`
-4. `./venv/bin/streamlit run app.py`
+2. Copy `.env.example` to `.env` and add your own `ANTHROPIC_API_KEY`.
+3. Generate the mock dataset: `./venv/bin/python data/generate_mock_data.py`
+
+**Every time you want to run it:**
+
+- `./run_demo.sh` — starts the app and opens it in Chrome. Ctrl+C in the terminal stops the
+  server. (Or run `./venv/bin/streamlit run app.py` directly if you don't use Chrome.)
+- `./reset_demo.py` — resets `data/employees.json` to its committed state and clears
+  `rules.db`/`audit_log.jsonl`, so a previous practice run's skill-tag corrections, saved
+  rule, and write-backs don't carry into the next one.
 
 Run the test suite: `./venv/bin/python -m pytest`
 
