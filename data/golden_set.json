@@ -1,0 +1,65 @@
+{
+  "_instructions": "Hand-label 5-10 correct matches. Each entry: employee_id should be a genuinely correct match for position_id per your own judgment of the criteria in build_spec.md. Do NOT ask the agent to fill this in — it must be independent of the agent's output.",
+  "matches": [
+    {
+      "employee_id": "E0008",
+      "position_id": "P001",
+      "expected_match": true,
+      "reason": "Available before Aug 8 target start; standard travel status, no conflict"
+    },
+    {
+      "employee_id": "E0011",
+      "position_id": "P001",
+      "expected_match": true,
+      "reason": "Available before Aug 8 target start; standard travel status, no conflict"
+    },
+    {
+      "employee_id": "E0013",
+      "position_id": "P001",
+      "expected_match": true,
+      "reason": "Available before Aug 8 target start; standard travel status, no conflict"
+    },
+    {
+      "employee_id": "E0012",
+      "position_id": "P001",
+      "expected_match": true,
+      "reason": "Available before Aug 8 target start; high-travel but opted into year-round travel, satisfies rule"
+    },
+    {
+      "employee_id": "E0015",
+      "position_id": "P001",
+      "expected_match": true,
+      "reason": "Available before Aug 8 target start; high-travel but opted into year-round travel, satisfies rule"
+    },
+    {
+      "employee_id": "E0021",
+      "position_id": "P001",
+      "expected_match": true,
+      "reason": "Available before Aug 8 target start; standard travel status, no conflict"
+    },
+    {
+      "employee_id": "E0007",
+      "position_id": "P001",
+      "expected_match": false,
+      "reason": "Available in time, but rolling off high-travel assignment with no year-round travel opt-in"
+    },
+    {
+      "employee_id": "E0022",
+      "position_id": "P001",
+      "expected_match": false,
+      "reason": "Available in time, but rolling off high-travel assignment with no year-round travel opt-in"
+    },
+    {
+      "employee_id": "E0005",
+      "position_id": "P001",
+      "expected_match": false,
+      "reason": "Not available in time — current project ends Aug 14, 6 days after target start"
+    },
+    {
+      "employee_id": "E0024",
+      "position_id": "P001",
+      "expected_match": false,
+      "reason": "Not available in time — current project ends Oct 24, well past target start"
+    }
+  ]
+}
