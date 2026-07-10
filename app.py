@@ -160,18 +160,19 @@ with col_matches:
     id_to_name = {e.employee_id: e.name for e in employees}
     featured_id = st.selectbox(
         "Employee ID:",
-        options=sorted(id_to_name),
-        format_func=lambda eid: f"{eid} — {id_to_name[eid]}",
+        options=[None] + sorted(id_to_name),
+        format_func=lambda eid: "— Select an employee —" if eid is None else f"{eid} — {id_to_name[eid]}",
         key="featured_employee_id",
     )
-    featured_score = next((r for r in ranked if r.employee_id == featured_id), None)
-    if featured_score is None:
-        st.info(f"{id_to_name[featured_id]} is excluded by the persisted rule "
-                f"(see the exclusions listed below) or not currently in the redeployment pool.")
-    elif featured_score.eligible:
-        st.success(explain_match(id_to_name[featured_id], featured_score.matched_skills, position.role_title, available=True))
-    else:
-        st.error(explain_exclusion(id_to_name[featured_id], featured_score.reason))
+    if featured_id is not None:
+        featured_score = next((r for r in ranked if r.employee_id == featured_id), None)
+        if featured_score is None:
+            st.info(f"{id_to_name[featured_id]} is excluded by the persisted rule "
+                    f"(see the exclusions listed below) or not currently in the redeployment pool.")
+        elif featured_score.eligible:
+            st.success(explain_match(id_to_name[featured_id], featured_score.matched_skills, position.role_title, available=True))
+        else:
+            st.error(explain_exclusion(id_to_name[featured_id], featured_score.reason))
 
     st.subheader("All candidates")
     for r in ranked:
