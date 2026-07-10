@@ -197,31 +197,17 @@ with tab_matches:
         st.rerun()
 
 with tab_summary:
-    total_matches = 0
-    total_no_confident = 0
-    for pos_id, base_position in positions.items():
-        # P001 is the position this rule is actually about, so it uses the same rule-derived
-        # skill/timing criteria as the Candidate Matches column. Other positions keep their own
-        # distinct role requirements (e.g. P002 needs Kubernetes/Terraform, not Rust) — only the
-        # travel-style exclude_if/unless rule (via excluded_by_rule) is shared across all of them.
-        if pos_id == "P001":
-            summary_position = base_position.model_copy(update={
-                "required_skills": rule_required_skills,
-                "target_start_date": rule_target_start_date,
-            })
-        else:
-            summary_position = base_position
-        eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
-        ranked = rank_candidates(eligible_pool, assignments, summary_position)
-        eligible = [r for r in ranked if r.eligible]
-        position = summary_position
-        filled = min(len(eligible), position.headcount_needed)
-        total_matches += filled
-        total_no_confident += max(0, position.headcount_needed - len(eligible))
-        st.write(f"**{position.role_title}**: {len(eligible)} eligible candidates found, "
-                 f"needs {position.headcount_needed} — "
-                 f"{'no confident match for remainder' if len(eligible) < position.headcount_needed else 'fully covered'}")
-
+    # Scoped to P001 only — the position this rule is actually about, using the same
+    # rule-derived skill/timing criteria as the Candidate Matches column.
+    summary_position = positions["P001"].model_copy(update={
+        "required_skills": rule_required_skills,
+        "target_start_date": rule_target_start_date,
+    })
+    eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
+    ranked = rank_candidates(eligible_pool, assignments, summary_position)
+    eligible = [r for r in ranked if r.eligible]
+    total_matches = min(len(eligible), summary_position.headcount_needed)
+    total_no_confident = max(0, summary_position.headcount_needed - len(eligible))
 
     MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
     cost_avoidance = total_matches * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier
