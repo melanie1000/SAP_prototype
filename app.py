@@ -117,8 +117,8 @@ with st.container(border=True):
     banner_col1.metric("Qualified candidates", f"{total_matches} for {position.headcount_needed} positions")
     banner_col2.metric("Slots with no confident match", total_no_confident)
     banner_col3.metric("Cost savings", f"${cost_avoidance:,.0f}")
-    st.caption("This value represents the savings from redeploying internal hires versus hiring new employees for the project. "
-               "Updates live as the rule and candidate corrections below change.")
+    banner_col3.caption("This value represents the savings from redeploying internal hires versus hiring new "
+                         "employees for the project. Updates live as the rule and candidate corrections below change.")
 
 col_question, col_rule, col_approve = st.columns(3)
 
