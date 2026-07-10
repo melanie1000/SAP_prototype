@@ -116,7 +116,7 @@ if filter_dict.get("error"):
 
 excluded_by_rule = apply_filter(filter_dict, employees, assignments)
 
-col_matches, col_summary = st.columns([2, 1])
+col_summary, col_matches = st.columns([1, 2])
 
 with col_matches:
     st.markdown("## Candidate Matches")
