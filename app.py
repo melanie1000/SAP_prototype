@@ -83,24 +83,27 @@ with col_question:
             st.error(f"Couldn't map that query to a project: {retrieval_filter['error']}")
         else:
             query_results = apply_retrieval_filter(retrieval_filter, employees)
-            st.write(f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\":")
 
             rust_tagged = [e for e in query_results if "Rust" in e.skills]
             empty_skills = [e for e in query_results if not e.skills]
             other_skills = [e for e in query_results if e.skills and "Rust" not in e.skills]
 
-            for group_label, group in [
-                ("Skills: Rust", rust_tagged),
-                ("Skills: empty", empty_skills),
-                ("Skills: other", other_skills),
-            ]:
-                st.write(f"**{group_label}** ({len(group)})")
-                for emp in group:
-                    skills_str = ", ".join(emp.skills) if emp.skills else "(none listed)"
-                    st.write(f"- {emp.name} ({emp.employee_id}) — {emp.current_title}, {emp.department} — Skills: {skills_str}")
-                if group and group_label != "Skills: Rust":
-                    if st.button(f"Add 'Rust' skill tag to all {len(group)} in this group", key=f"bulk_{group_label}"):
-                        _apply_bulk_correction(group, group_label)
+            with st.expander(
+                f"Found {len(query_results)} people matching \"{retrieval_filter.get('project_name')}\"",
+                expanded=True,
+            ):
+                for group_label, group in [
+                    ("Skills: Rust", rust_tagged),
+                    ("Skills: empty", empty_skills),
+                    ("Skills: other", other_skills),
+                ]:
+                    st.write(f"**{group_label}** ({len(group)})")
+                    for emp in group:
+                        skills_str = ", ".join(emp.skills) if emp.skills else "(none listed)"
+                        st.write(f"- {emp.name} ({emp.employee_id}) — {emp.current_title}, {emp.department} — Skills: {skills_str}")
+                    if group and group_label != "Skills: Rust":
+                        if st.button(f"Add 'Rust' skill tag to all {len(group)} in this group", key=f"bulk_{group_label}"):
+                            _apply_bulk_correction(group, group_label)
 
 with col_rule:
     st.subheader("Eligibility rule")
