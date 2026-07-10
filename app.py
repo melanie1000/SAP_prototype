@@ -148,9 +148,6 @@ with tab_matches:
         "target_start_date": rule_target_start_date,
     })
     st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}")
-    skills_display = ", ".join(rule_required_skills) if rule_required_skills else "(none specified yet)"
-    timing_display = f"within {rule_available_within_days} days" if rule_available_within_days is not None else "(no timeframe specified yet)"
-    st.caption(f"Applying your rule: required skills = {skills_display}; availability = {timing_display}")
 
     eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, position)
