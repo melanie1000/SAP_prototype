@@ -1,6 +1,11 @@
 import json
 import os
 from datetime import datetime, timezone
+from pathlib import Path
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+DEFAULT_EMPLOYEES_PATH = _REPO_ROOT / "data" / "employees.json"
+DEFAULT_AUDIT_LOG_PATH = _REPO_ROOT / "audit_log.jsonl"
 
 
 def apply_writeback(
@@ -9,8 +14,8 @@ def apply_writeback(
     status: str,
     notes: str,
     approved_by: str,
-    employees_path: str = "data/employees.json",
-    audit_log_path: str = "audit_log.jsonl",
+    employees_path: str | Path = DEFAULT_EMPLOYEES_PATH,
+    audit_log_path: str | Path = DEFAULT_AUDIT_LOG_PATH,
 ) -> dict[str, list[str]]:
     """Returns {"updated": [...], "not_found": [...]} so the caller can surface any
     requested employee_ids that didn't match a real record — only actually-updated
@@ -51,8 +56,8 @@ def correct_skill_tag(
     employee_id: str,
     skill_to_add: str,
     approved_by: str,
-    employees_path: str = "data/employees.json",
-    audit_log_path: str = "audit_log.jsonl",
+    employees_path: str | Path = DEFAULT_EMPLOYEES_PATH,
+    audit_log_path: str | Path = DEFAULT_AUDIT_LOG_PATH,
 ) -> dict[str, str]:
     """Returns {"result": "added" | "already_present" | "not_found"}. Only writes the
     employees file and appends an audit entry when the skill was actually added — never
