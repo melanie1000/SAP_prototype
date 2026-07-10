@@ -70,3 +70,39 @@ def apply_filter(
                 + (f" (not overridden: {unless['field']} != {unless['equals']})" if unless else "")
             )
     return excluded
+
+
+RETRIEVAL_SYSTEM_PROMPT = """You extract a project name from a People Ops planner's natural-language \
+retrieval query. This is a one-shot lookup (like asking "who worked on X"), NOT a standing eligibility \
+rule — do not interpret it as an exclusion/inclusion rule.
+
+Output ONLY a JSON object with this exact shape, no prose:
+{"project_name": "<exact project name as it would appear in project history>"}
+
+If no project name can be identified, output:
+{"project_name": null, "error": "<why it couldn't be extracted>"}
+"""
+
+
+def interpret_retrieval_query(query_text: str, client: anthropic.Anthropic | None = None) -> dict:
+    client = client or anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    response = client.messages.create(
+        model="claude-sonnet-5",
+        max_tokens=150,
+        thinking={"type": "disabled"},
+        system=RETRIEVAL_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": query_text}],
+    )
+    text_block = next(block for block in response.content if block.type == "text")
+    return json.loads(text_block.text.strip())
+
+
+def apply_retrieval_filter(filter_dict: dict, employees: list) -> list:
+    """Returns employees whose project_history contains a matching project_name. Read-only — never persists to rule_store."""
+    project_name = filter_dict.get("project_name")
+    if not project_name:
+        return []
+    return [
+        emp for emp in employees
+        if any(entry.project_name == project_name for entry in emp.project_history)
+    ]
