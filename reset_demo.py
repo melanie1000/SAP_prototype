@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Resets the demo to a clean starting state between practice runs:
 
 1. Restores data/employees.json to its last-committed state (undoes any skill-tag
