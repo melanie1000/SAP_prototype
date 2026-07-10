@@ -206,11 +206,12 @@ with tab_summary:
     eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, summary_position)
     eligible = [r for r in ranked if r.eligible]
-    total_matches = min(len(eligible), summary_position.headcount_needed)
-    total_no_confident = max(0, summary_position.headcount_needed - len(eligible))
+    total_matches = len(eligible)  # everyone who matches the criteria, not capped to headcount
+    fillable_slots = min(total_matches, summary_position.headcount_needed)  # capped, for cost math below
+    total_no_confident = max(0, summary_position.headcount_needed - total_matches)
 
     MULTIPLIER_MIDPOINT = 4  # midpoint of the cited 3-5x external-hire-cost range
-    cost_avoidance = total_matches * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier
+    cost_avoidance = fillable_slots * EXTERNAL_HIRE_BASELINE * (MULTIPLIER_MIDPOINT - 1)  # marginal savings, not the full multiplier; capped since you can only fill the open slots
     st.metric("Total redeployment matches", total_matches)
     st.metric("Slots with no confident match", total_no_confident)
     st.metric("Estimated cost avoidance (illustrative)", f"${cost_avoidance:,.0f}")
