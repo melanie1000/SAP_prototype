@@ -8,24 +8,33 @@ from src.models import Employee, ProjectAssignment
 
 load_dotenv()
 
-SYSTEM_PROMPT = """You translate a People Ops planner's natural-language eligibility rule into a \
-structured JSON filter. The filter is applied to candidate employees BEFORE a deterministic \
-scorer ranks them on skills and availability.
+SYSTEM_PROMPT = """You translate a People Ops planner's natural-language eligibility description into a \
+structured JSON filter. You only extract criteria — deterministic code applies them; you never decide \
+who is eligible yourself. The rule may describe required skills, an availability timeframe, and/or an \
+exclusion-style business rule (e.g. about travel) — extract whichever of these are actually present.
 
 Output ONLY a JSON object with this exact shape, no prose:
 {
-  "exclude_if": {"field": "<employee or assignment field name>", "equals": "<value>"},
+  "required_skills": ["<skill name>", ...],
+  "available_within_days": <integer> | null,
+  "exclude_if": {"field": "<employee or assignment field name>", "equals": "<value>"} | null,
   "unless": {"field": "<employee field name>", "equals": "<value>"} | null
 }
 
-Valid fields and their exact allowed values:
+- required_skills: exact skill names the rule requires (e.g. "Rust"). Empty list [] if none mentioned.
+- available_within_days: if the rule mentions a timeframe (e.g. "within 30 days", "finishing in 30 days"),
+  extract the integer number of days. null if no timeframe is mentioned.
+- exclude_if / unless: for exclusion-style criteria about travel, department, or location.
+
+Valid exclude_if/unless fields and their exact allowed values:
 - intensity_flag: "high-travel" or "standard"
 - travel_preference: "standard" or "opted_into_year_round_travel"
 - department: "Engineering", "Platform", "Data", "Infrastructure", or "Product Engineering"
 - location: "Austin", "Remote-US", "Berlin", "Bengaluru", "Toronto", or "Remote-EU"
 
-If the rule doesn't map cleanly to this shape, output:
-{"exclude_if": null, "unless": null, "error": "<why it doesn't map>"}
+Omit whichever parts aren't mentioned in the rule (empty list / null) rather than guessing at a value.
+If NOTHING in the rule can be mapped to this schema at all, output:
+{"required_skills": [], "available_within_days": null, "exclude_if": null, "unless": null, "error": "<why it doesn't map>"}
 """
 
 

@@ -1,5 +1,6 @@
 # app.py
 import os
+from datetime import date, timedelta
 import streamlit as st
 from dotenv import load_dotenv
 
@@ -15,6 +16,9 @@ load_dotenv()
 RULE_DB = DEFAULT_DB_PATH  # anchored to repo root by rule_store.py, not cwd-relative
 EXTERNAL_HIRE_BASELINE = 5_475  # SHRM 2025 Benchmarking Report, non-executive cost-per-hire (see README Sources)
 APPROVER_NAME = "Melanie F., Workforce Planning"  # stands in for the authenticated user's identity (RBAC in production)
+TODAY = date(2026, 7, 9)  # fixed reference date the mock dataset's dates are calibrated against
+NO_TIMING_CONSTRAINT = "2099-12-31"  # used when the rule doesn't mention an availability window
+EMPTY_FILTER = {"required_skills": [], "available_within_days": None, "exclude_if": None, "unless": None}
 
 
 @st.cache_data(show_spinner="Interpreting rule...")
@@ -108,29 +112,47 @@ with col_rule:
         st.rerun()
 
 if not rule_text.strip():
-    filter_dict = {"exclude_if": None, "unless": None}
+    filter_dict = dict(EMPTY_FILTER)
 elif not os.environ.get("ANTHROPIC_API_KEY"):
     st.warning("No ANTHROPIC_API_KEY found in .env — rule interpretation will fail until it's set.")
-    filter_dict = {"exclude_if": None, "unless": None}
+    filter_dict = dict(EMPTY_FILTER)
 else:
     try:
         filter_dict = _cached_interpret_rule(rule_text)
     except Exception as e:
         st.error(f"Couldn't interpret the rule (API error): {e}")
-        filter_dict = {"exclude_if": None, "unless": None}
+        filter_dict = dict(EMPTY_FILTER)
 
 if filter_dict.get("error"):
     st.error(f"Couldn't map that rule to a filter: {filter_dict['error']}")
 
 excluded_by_rule = apply_filter(filter_dict, employees, assignments)
 
+# Skill and availability criteria come entirely from what was typed into the rule box above —
+# nothing is pre-set on the position itself. Empty/unspecified means "no constraint on that
+# dimension yet," not "use some hidden default."
+rule_required_skills = filter_dict.get("required_skills") or []
+rule_available_within_days = filter_dict.get("available_within_days")
+rule_target_start_date = (
+    (TODAY + timedelta(days=rule_available_within_days)).isoformat()
+    if rule_available_within_days is not None
+    else NO_TIMING_CONSTRAINT
+)
+
 col_summary, col_matches = st.columns([1, 2])
 
 with col_matches:
     st.markdown("## Candidate Matches")
-    position = positions["P001"]
-    st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}, "
-             f"start by {position.target_start_date}")
+    # Skill/timing criteria applied below come entirely from the rule you typed — the position
+    # itself only contributes its role title and headcount, not a hidden skill/date requirement.
+    position = positions["P001"].model_copy(update={
+        "required_skills": rule_required_skills,
+        "target_start_date": rule_target_start_date,
+    })
+    st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}")
+    skills_display = ", ".join(rule_required_skills) if rule_required_skills else "(none specified yet)"
+    timing_display = f"within {rule_available_within_days} days" if rule_available_within_days is not None else "(no timeframe specified yet)"
+    st.caption(f"Applying your rule: required skills = {skills_display}; availability = {timing_display}")
 
     eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, position)
@@ -188,10 +210,22 @@ with col_summary:
     st.markdown("## Summary")
     total_matches = 0
     total_no_confident = 0
-    for pos_id, position in positions.items():
+    for pos_id, base_position in positions.items():
+        # P001 is the position this rule is actually about, so it uses the same rule-derived
+        # skill/timing criteria as the Candidate Matches column. Other positions keep their own
+        # distinct role requirements (e.g. P002 needs Kubernetes/Terraform, not Rust) — only the
+        # travel-style exclude_if/unless rule (via excluded_by_rule) is shared across all of them.
+        if pos_id == "P001":
+            summary_position = base_position.model_copy(update={
+                "required_skills": rule_required_skills,
+                "target_start_date": rule_target_start_date,
+            })
+        else:
+            summary_position = base_position
         eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
-        ranked = rank_candidates(eligible_pool, assignments, position)
+        ranked = rank_candidates(eligible_pool, assignments, summary_position)
         eligible = [r for r in ranked if r.eligible]
+        position = summary_position
         filled = min(len(eligible), position.headcount_needed)
         total_matches += filled
         total_no_confident += max(0, position.headcount_needed - len(eligible))
