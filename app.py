@@ -170,7 +170,10 @@ with tab_matches:
             st.error(explain_exclusion(featured_label, featured_score.reason))
 
     st.subheader("All candidates")
-    for r in ranked:
+    # Displayed in employee-ID order for easy scanning against the golden set — the
+    # underlying `ranked` order (best skills/tenure match first) still drives which
+    # eligible people get offered in the write-back selector below.
+    for r in sorted(ranked, key=lambda r: r.employee_id):
         emp = next(e for e in employees if e.employee_id == r.employee_id)
         emp_label = f"{emp.name} ({emp.employee_id})"
         if r.eligible:
@@ -178,7 +181,7 @@ with tab_matches:
         else:
             st.error(explain_exclusion(emp_label, r.reason))
 
-    for emp_id, reason in excluded_by_rule.items():
+    for emp_id, reason in sorted(excluded_by_rule.items()):
         emp = next(e for e in employees if e.employee_id == emp_id)
         st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
 
