@@ -100,13 +100,13 @@ The app is a single scrolling view, no tabs.
    skills, timing, and travel tolerance — come entirely from what's typed here; nothing is
    pre-baked into the mock position data. Click Save to persist it; it's re-applied live as
    corrections land.
-3. **Approve candidate for re-deployment** (below, left column) — every eligible candidate,
-   ranked best skills/tenure match first, requiring explicit selection before "Select and
-   Approve" (nothing is pre-selected). Directly below it: qualified-candidate count vs.
-   headcount, slots with no confident match, and an estimated cost-avoidance figure.
-4. **All candidates** (below, right column, adjacent to the above) — every candidate in the
-   pool, sorted by employee ID, each with a plain-language match or exclusion reason. A
-   per-employee lookup box sits at the very bottom of the page.
+3. **All candidates** (below, left column, under "Ask a question") — every candidate in the
+   pool, sorted by employee ID, each with a plain-language match or exclusion reason.
+4. **Approve candidate for re-deployment** (below, right column, under "Eligibility rule")
+   — every eligible candidate, ranked best skills/tenure match first, requiring explicit
+   selection before "Select and Approve" (nothing is pre-selected). Directly below it:
+   qualified-candidate count vs. headcount, slots with no confident match, and an estimated
+   cost-avoidance figure. A per-employee lookup box sits at the very bottom of the page.
 
 ## Evaluation
 
