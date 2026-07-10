@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 from src.data_loader import load_employees, load_project_assignments, load_open_positions, assignments_by_employee
 from src.scorer import rank_candidates, has_required_skills
-from src.rule_store import init_db, save_rule, get_active_rule, DEFAULT_DB_PATH, DEFAULT_RULE
+from src.rule_store import init_db, save_rule, get_active_rule, DEFAULT_DB_PATH
 from src.rule_interpreter import interpret_rule, apply_filter, interpret_retrieval_query, apply_retrieval_filter
 from src.explain import explain_match, explain_exclusion
 from src.writeback import apply_writeback, correct_skill_tag
@@ -28,8 +28,6 @@ def _cached_interpret_retrieval_query(text: str) -> dict:
 
 
 init_db(RULE_DB)
-if get_active_rule(RULE_DB) is None:
-    save_rule(RULE_DB, DEFAULT_RULE)
 
 st.set_page_config(page_title="Redeployment Decision-Support Agent", layout="wide")
 st.title("Redeployment Decision-Support Agent")
@@ -95,13 +93,15 @@ with col_question:
 
 with col_rule:
     st.subheader("Eligibility rule")
-    rule_text = st.text_area("Edit the standing rule (natural language):", value=get_active_rule(RULE_DB), height=100)
+    rule_text = st.text_area("Edit the standing rule (natural language):", value=get_active_rule(RULE_DB) or "", height=100)
     st.caption("Results below update live as you edit this text — click Save to make it the standing rule.")
     if st.button("Save & re-apply rule"):
         save_rule(RULE_DB, rule_text)
         st.rerun()
 
-if not os.environ.get("ANTHROPIC_API_KEY"):
+if not rule_text.strip():
+    filter_dict = {"exclude_if": None, "unless": None}
+elif not os.environ.get("ANTHROPIC_API_KEY"):
     st.warning("No ANTHROPIC_API_KEY found in .env — rule interpretation will fail until it's set.")
     filter_dict = {"exclude_if": None, "unless": None}
 else:

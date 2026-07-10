@@ -4,8 +4,8 @@
 1. Restores data/employees.json to its last-committed state (undoes any skill-tag
    corrections or redeployment write-backs made during practice).
 2. Deletes audit_log.jsonl (gitignored — recreated fresh on the next write).
-3. Deletes rules.db (gitignored — app.py recreates it with just the default rule
-   the next time it launches).
+3. Deletes rules.db (gitignored — the eligibility rule box starts blank again on
+   the next launch, with nothing pre-saved).
 
 Run: ./venv/bin/python reset_demo.py
 """
@@ -36,7 +36,7 @@ def main():
     rules_db = REPO_ROOT / "rules.db"
     if rules_db.exists():
         rules_db.unlink()
-        print("Deleted rules.db — will be recreated with just the default rule on next launch.")
+        print("Deleted rules.db — the rule box will start blank on next launch.")
     else:
         print("rules.db already absent — nothing to clear.")
 
