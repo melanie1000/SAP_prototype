@@ -24,7 +24,12 @@ RUST_VARIANTS = ["Rust", "Rust programming", "RUST"]
 
 
 def make_name(i):
-    return f"{FIRST_NAMES[i % len(FIRST_NAMES)]} {LAST_NAMES[(i * 7) % len(LAST_NAMES)]}"
+    # i % 20 and (i * 7) % 20 both have period 20, so the (first, last) pair repeated every
+    # 20 employees — offsetting the last-name index by the block number (i // 20) keeps pairs
+    # unique across all 5 blocks of 20 in a 100-employee run, up to len(FIRST_NAMES) * len(LAST_NAMES) total.
+    first_idx = i % len(FIRST_NAMES)
+    last_idx = (i // len(FIRST_NAMES) + first_idx) % len(LAST_NAMES)
+    return f"{FIRST_NAMES[first_idx]} {LAST_NAMES[last_idx]}"
 
 
 def make_project_history(rust_project_months_ago=None):

@@ -50,7 +50,7 @@ approver_name = st.text_input(
     value="", key="approver_name",
 )
 
-st.subheader("Step 1: One-shot lookup (not a persisted rule)")
+st.subheader("Ask a question")
 query_text = st.text_input("Ask a question about project history:", value="")
 if query_text and os.environ.get("ANTHROPIC_API_KEY"):
     try:
@@ -122,7 +122,7 @@ excluded_by_rule = apply_filter(filter_dict, employees, assignments)
 tab1, tab2 = st.tabs(["Single-case view", "Scale view"])
 
 with tab1:
-    st.markdown("**Part 1 demo:** one open position, ranked candidates, live rule edits.")
+    st.markdown("## Candidate Matches")
     position = positions["P001"]
     st.write(f"Position: **{position.role_title}** — needs {position.headcount_needed}, "
              f"start by {position.target_start_date}")
@@ -169,7 +169,7 @@ with tab1:
 
     st.subheader("Approve write-back")
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
-    selected = st.multiselect("Select employees to mark redeployed:", options=eligible_ids, default=eligible_ids)
+    selected = st.multiselect("Select employees to mark redeployed:", options=eligible_ids, default=[])
     if st.button("Approve and write back"):
         if not approver_name.strip():
             st.error("Enter an approver name above before writing back.")
@@ -187,7 +187,6 @@ with tab1:
             st.rerun()
 
 with tab2:
-    st.markdown("**Part 2 demo:** apply the same rule set across all positions at once.")
     total_matches = 0
     total_no_confident = 0
     for pos_id, position in positions.items():
