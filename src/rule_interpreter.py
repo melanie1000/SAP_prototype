@@ -56,23 +56,53 @@ Valid exclude_if/unless fields and their exact allowed values:
 - department: "Engineering", "Platform", "Data", "Infrastructure", or "Product Engineering"
 - location: "Austin", "Remote-US", "Berlin", "Bengaluru", "Toronto", or "Remote-EU"
 
+Travel-tolerance rules are ALWAYS expressed the same way regardless of how the planner phrases them —
+whether stated as an exclusion ("exclude high-travel people unless...") or as a positive requirement
+("who doesn't mind more travel", "is fine with a heavy travel schedule", "doesn't have an issue with
+travel"), the correct mapping is always:
+  "exclude_if": {"field": "intensity_flag", "equals": "high-travel"},
+  "unless": {"field": "travel_preference", "equals": "opted_into_year_round_travel"}
+NEVER set exclude_if.field="intensity_flag" with equals="standard" — "standard" is the normal, non-disqualifying
+value and is never itself a reason for exclusion.
+
 Omit whichever parts aren't mentioned in the rule (empty list / null) rather than guessing at a value.
 If NOTHING in the rule can be mapped to this schema at all, output:
 {"required_skills": [], "available_within_days": null, "exclude_if": null, "unless": null, "error": "<why it doesn't map>"}
 """
 
 
-def interpret_rule(rule_text: str, client: anthropic.Anthropic | None = None) -> dict:
+def _call_and_parse_json(
+    system_prompt: str,
+    user_text: str,
+    max_tokens: int,
+    client: anthropic.Anthropic | None = None,
+    max_attempts: int = 3,
+) -> dict:
+    """Calls the API and parses a JSON object from the text response, retrying on a rare
+    empty/malformed response rather than surfacing a crash for what's usually a transient blip."""
     client = client or anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    response = client.messages.create(
-        model="claude-sonnet-5",
-        max_tokens=300,
-        thinking={"type": "disabled"},
-        system=SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": rule_text}],
-    )
-    text_block = next(block for block in response.content if block.type == "text")
-    return json.loads(text_block.text.strip())
+    last_error: Exception | None = None
+    for _ in range(max_attempts):
+        response = client.messages.create(
+            model="claude-sonnet-5",
+            max_tokens=max_tokens,
+            thinking={"type": "disabled"},
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_text}],
+        )
+        text_blocks = [b for b in response.content if b.type == "text"]
+        if not text_blocks:
+            last_error = ValueError("API response contained no text content")
+            continue
+        try:
+            return json.loads(text_blocks[0].text.strip())
+        except json.JSONDecodeError as e:
+            last_error = e
+    raise last_error
+
+
+def interpret_rule(rule_text: str, client: anthropic.Anthropic | None = None) -> dict:
+    return _call_and_parse_json(SYSTEM_PROMPT, rule_text, max_tokens=300, client=client)
 
 
 def apply_filter(
@@ -118,16 +148,7 @@ If no project name can be identified, output:
 
 
 def interpret_retrieval_query(query_text: str, client: anthropic.Anthropic | None = None) -> dict:
-    client = client or anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    response = client.messages.create(
-        model="claude-sonnet-5",
-        max_tokens=150,
-        thinking={"type": "disabled"},
-        system=RETRIEVAL_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": query_text}],
-    )
-    text_block = next(block for block in response.content if block.type == "text")
-    return json.loads(text_block.text.strip())
+    return _call_and_parse_json(RETRIEVAL_SYSTEM_PROMPT, query_text, max_tokens=150, client=client)
 
 
 def apply_retrieval_filter(filter_dict: dict, employees: list[Employee]) -> list[Employee]:
