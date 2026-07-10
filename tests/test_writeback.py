@@ -1,6 +1,7 @@
 import json
+import os
 import pytest
-from src.writeback import apply_writeback
+from src.writeback import apply_writeback, correct_skill_tag
 
 
 @pytest.fixture
@@ -111,62 +112,81 @@ def test_apply_writeback_audit_log_is_append_only_across_calls(employees_file, a
     assert json.loads(lines[1])["employee_id"] == "E0002"
 
 
-from src.writeback import correct_skill_tag
-
-
-def test_correct_skill_tag_adds_skill_if_missing(employees_file, audit_log_file):
-    import json
+def _add_employee(employees_file, employee_id, skills):
     with open(employees_file) as f:
         employees = json.load(f)
     employees.append({
-        "employee_id": "E0003", "name": "Sam Reyes", "current_title": "SE", "department": "Eng",
-        "skills": [], "project_history": [], "tenure_months": 18, "location": "Austin",
+        "employee_id": employee_id, "name": "Sam Reyes", "current_title": "SE", "department": "Eng",
+        "skills": skills, "project_history": [], "tenure_months": 18, "location": "Austin",
         "travel_preference": "standard",
     })
     with open(employees_file, "w") as f:
         json.dump(employees, f)
 
-    correct_skill_tag(
+
+def test_correct_skill_tag_adds_skill_if_missing(employees_file, audit_log_file):
+    _add_employee(employees_file, "E0003", skills=[])
+
+    result = correct_skill_tag(
         employee_id="E0003",
         skill_to_add="Rust",
         approved_by="melanie",
         employees_path=employees_file,
         audit_log_path=audit_log_file,
     )
+    assert result == {"result": "added"}
     with open(employees_file) as f:
         updated = json.load(f)
     e0003 = next(e for e in updated if e["employee_id"] == "E0003")
     assert "Rust" in e0003["skills"]
+    with open(audit_log_file) as f:
+        lines = f.readlines()
+    assert len(lines) == 1
 
 
-def test_correct_skill_tag_is_idempotent_if_skill_already_present(employees_file, audit_log_file):
-    correct_skill_tag(
+def test_correct_skill_tag_is_idempotent_and_does_not_double_log(employees_file, audit_log_file):
+    # E0001 already has "Rust" per the employees_file fixture — both calls are no-ops.
+    first = correct_skill_tag(
         employee_id="E0001", skill_to_add="Rust", approved_by="melanie",
         employees_path=employees_file, audit_log_path=audit_log_file,
     )
-    correct_skill_tag(
+    second = correct_skill_tag(
         employee_id="E0001", skill_to_add="Rust", approved_by="melanie",
         employees_path=employees_file, audit_log_path=audit_log_file,
     )
-    import json
+    assert first == {"result": "already_present"}
+    assert second == {"result": "already_present"}
+
     with open(employees_file) as f:
         updated = json.load(f)
     e0001 = next(e for e in updated if e["employee_id"] == "E0001")
     assert e0001["skills"].count("Rust") == 1
 
+    assert not os.path.exists(audit_log_file)  # no-ops must never write an audit entry
 
-def test_correct_skill_tag_appends_audit_log_entry_with_distinguishable_action(employees_file, audit_log_file):
-    correct_skill_tag(
-        employee_id="E0001", skill_to_add="Rust", approved_by="melanie",
+
+def test_correct_skill_tag_does_not_fabricate_entry_for_nonexistent_employee(employees_file, audit_log_file):
+    result = correct_skill_tag(
+        employee_id="E9999", skill_to_add="Rust", approved_by="melanie",
         employees_path=employees_file, audit_log_path=audit_log_file,
     )
-    import json
+    assert result == {"result": "not_found"}
+    assert not os.path.exists(audit_log_file)
+
+
+def test_correct_skill_tag_appends_audit_log_entry_with_distinguishable_action(employees_file, audit_log_file):
+    _add_employee(employees_file, "E0003", skills=[])
+
+    correct_skill_tag(
+        employee_id="E0003", skill_to_add="Rust", approved_by="melanie",
+        employees_path=employees_file, audit_log_path=audit_log_file,
+    )
     with open(audit_log_file) as f:
         lines = f.readlines()
     assert len(lines) == 1
     entry = json.loads(lines[0])
     assert entry["action"] == "skill_tag_correction"
-    assert entry["employee_id"] == "E0001"
+    assert entry["employee_id"] == "E0003"
     assert entry["skill_added"] == "Rust"
     assert entry["approved_by"] == "melanie"
     assert "timestamp" in entry
