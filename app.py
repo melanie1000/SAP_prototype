@@ -14,6 +14,7 @@ load_dotenv()
 
 RULE_DB = DEFAULT_DB_PATH  # anchored to repo root by rule_store.py, not cwd-relative
 EXTERNAL_HIRE_BASELINE = 5_475  # SHRM 2025 Benchmarking Report, non-executive cost-per-hire (see README Sources)
+APPROVER_NAME = "Melanie F., Workforce Planning"  # stands in for the authenticated user's identity (RBAC in production)
 
 
 @st.cache_data(show_spinner="Interpreting rule...")
@@ -45,11 +46,6 @@ positions = {p.position_id: p for p in load_open_positions()}
 # session) so the same person can't be double-booked into a second position's candidate pool.
 available_employees = [e for e in employees if not e.redeployment_status]
 
-approver_name = st.text_input(
-    "Approved by (required before any write-back or skill-tag correction):",
-    value="", key="approver_name",
-)
-
 st.subheader("Ask a question")
 query_text = st.text_input("Ask a question about project history:", value="")
 if query_text and os.environ.get("ANTHROPIC_API_KEY"):
@@ -74,22 +70,19 @@ if query_text and os.environ.get("ANTHROPIC_API_KEY"):
                 flagged_ids.append(emp.employee_id)
                 st.warning(f"- {emp.name} ({emp.employee_id}) — missing/inconsistent Rust tag: {emp.skills}")
                 if st.button(f"Correct tag: add 'Rust' for {emp.name}", key=f"correct_{emp.employee_id}"):
-                    if not approver_name.strip():
-                        st.error("Enter an approver name above before correcting a skill tag.")
+                    correction = correct_skill_tag(
+                        employee_id=emp.employee_id,
+                        skill_to_add="Rust",
+                        approved_by=APPROVER_NAME,
+                    )
+                    if correction["result"] == "added":
+                        st.session_state["featured_employee_id"] = emp.employee_id
+                        st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
+                        st.rerun()
+                    elif correction["result"] == "already_present":
+                        st.info(f"{emp.name} already has the Rust tag — no change made.")
                     else:
-                        correction = correct_skill_tag(
-                            employee_id=emp.employee_id,
-                            skill_to_add="Rust",
-                            approved_by=approver_name.strip(),
-                        )
-                        if correction["result"] == "added":
-                            st.session_state["featured_employee_id"] = emp.employee_id
-                            st.success(f"Corrected {emp.name}'s skill tag. Re-run the eligibility rule below to see the effect.")
-                            st.rerun()
-                        elif correction["result"] == "already_present":
-                            st.info(f"{emp.name} already has the Rust tag — no change made.")
-                        else:
-                            st.error(f"Could not find employee {emp.employee_id} — no change made.")
+                        st.error(f"Could not find employee {emp.employee_id} — no change made.")
         # Default the featured-candidate lookup below to the first flagged person, so the
         # single-case view has someone worth watching before any correction happens.
         if flagged_ids and "featured_employee_id" not in st.session_state:
@@ -167,20 +160,17 @@ with tab1:
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
     selected = st.multiselect("Select employees to mark redeployed:", options=eligible_ids, default=[])
     if st.button("Approve and write back"):
-        if not approver_name.strip():
-            st.error("Enter an approver name above before writing back.")
-        else:
-            result = apply_writeback(
-                employee_ids=selected,
-                position_id=position.position_id,
-                status="redeployed",
-                notes=f"Matched via rule: {rule_text}",
-                approved_by=approver_name.strip(),
-            )
-            st.success(f"Wrote back status for {len(result['updated'])} employees. See audit_log.jsonl.")
-            if result["not_found"]:
-                st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
-            st.rerun()
+        result = apply_writeback(
+            employee_ids=selected,
+            position_id=position.position_id,
+            status="redeployed",
+            notes=f"Matched via rule: {rule_text}",
+            approved_by=APPROVER_NAME,
+        )
+        st.success(f"Wrote back status for {len(result['updated'])} employees. See audit_log.jsonl.")
+        if result["not_found"]:
+            st.warning(f"Could not find these employee IDs, no write occurred for them: {result['not_found']}")
+        st.rerun()
 
 with tab2:
     total_matches = 0
