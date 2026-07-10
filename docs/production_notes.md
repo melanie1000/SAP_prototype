@@ -12,26 +12,35 @@ punch list, not a finished design.
 - **UI:** Streamlit — one script (`app.py`), server-rendered, no separate frontend build.
   Session state lives in the Streamlit process; nothing survives a server restart except what's
   explicitly persisted (see below).
+
 - **Data models:** Pydantic v2 (`src/models.py`) — `Employee`, `ProjectAssignment`,
   `OpenPosition`, `ProjectHistoryEntry`. Validation happens at load time only.
+
 - **"EC" data:** static JSON files (`data/employees.json`, `project_assignments.json`,
   `open_positions.json`), generated once by `data/generate_mock_data.py` and then mutated
   in place by the app's write-back functions. No real SuccessFactors connection exists.
+
 - **Rule persistence:** SQLite via stdlib `sqlite3` (`src/rule_store.py`, `rules.db`) — a
   single active rule, versioned by insert, no concurrency control.
+
 - **LLM:** Anthropic API (`claude-sonnet-5`), used for exactly two things — translating a
   typed eligibility rule into a structured filter, and translating a one-shot retrieval
   query into a project name. The LLM never decides who's eligible; a deterministic scorer
   (`src/scorer.py`) always makes that call from the LLM's structured output.
+
 - **Audit trail:** flat-file JSONL (`audit_log.jsonl`), append-only, one line per write-back
   or skill-tag correction. No tamper protection, no retention policy, no query interface.
+
 - **Auth:** none. `APPROVER_NAME` is a hardcoded constant standing in for "whoever is logged
   in" — there is no login at all.
+
 - **Secrets:** local `.env` file (`ANTHROPIC_API_KEY`), loaded via `python-dotenv`.
+
 - **Tests:** 53 unit/integration tests (`pytest`), plus a 10-example hand-labeled golden set
   (`data/golden_set.json`) evaluated via `src/run_eval.py` (positive precision@3, negative
   exclusion rate). No load testing, no concurrency testing, no LLM-inversion regression suite
   beyond what's manually documented in the implementation plan.
+
 - **Deployment:** none — runs locally via `./run_demo.sh` or `streamlit run app.py`.
 
 ## What the prototype validated (worth carrying forward as-is)
@@ -42,11 +51,13 @@ punch list, not a finished design.
   the only thing that actually marks someone eligible or not, using plain field comparisons.
   This kept eligibility auditable and testable independent of LLM behavior, and is the right
   pattern to keep — don't let a future team fold the decision logic into a prompt.
+
 - **Human-approval gate on every write**: nothing touches employee data without an explicit
   UI action (`apply_writeback`, `correct_skill_tag`), and both functions only log an audit
   entry for what actually changed — no fabricated log lines for no-ops or unmatched IDs. This
   guarantee (verified in tests) is worth preserving exactly, since it's the thing that makes
   "not an autonomous decision-maker" true rather than aspirational.
+
 - **LLM output is genuinely unreliable in one specific, addressable way**: during build, the
   same exact rule text produced correct output, semantically inverted output (excluding the
   wrong group), and a raw JSON parse failure across three consecutive calls. This was fixed
@@ -63,6 +74,7 @@ punch list, not a finished design.
   model as custom MDF objects (`project_assignments`, `travel_preference`) would need to
   actually exist as provisioned custom objects/fields in a real EC tenant, with real data
   governance around who can edit them.
+
 - **Skills** are a free-text list on each employee record. The deliberately-injected data
   mess (missing tags, inconsistent spelling like "Rust"/"Rust programming"/"RUST", stale
   tags with no recent project work) was built to prove the *matching logic* handles messy
@@ -70,6 +82,7 @@ punch list, not a finished design.
   with a real skills/competency taxonomy (SAP's skills ontology or a third-party system) so
   skills are normalized IDs, not strings, which eliminates the inconsistent-spelling problem
   at the source instead of requiring a human to manually correct it person-by-person in a UI.
+
 - **Write-back target**: the app writes directly to the mock JSON file. Production needs
   transactional writes to EC (or a staging/review queue in front of EC), with idempotency
   and conflict handling if two planners act on overlapping candidate pools concurrently —
@@ -142,8 +155,10 @@ punch list, not a finished design.
 - Who owns the skills taxonomy going forward — is normalizing skill tags at the source (EC
   integration) in scope for this team, or is messy skill data a permanent constraint the
   matching logic needs to keep handling gracefully?
+
 - What's the actual approval workflow supposed to be — is single-person approval (today's
   design) sufficient, or does a real redeployment decision need two-person sign-off given
   its employment impact?
+  
 - Is Streamlit acceptable as the production UI layer, or is this prototype's real deliverable
   the scorer/rule-interpreter core, to be re-exposed behind a different frontend?
