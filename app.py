@@ -156,7 +156,6 @@ with col_matches:
     eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
     ranked = rank_candidates(eligible_pool, assignments, position)
 
-    st.subheader("Featured candidate")
     st.caption("Look up any person's status directly, regardless of where they rank in the list below.")
     id_to_name = {e.employee_id: e.name for e in employees}
     featured_id = st.selectbox(
