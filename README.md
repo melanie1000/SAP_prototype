@@ -5,7 +5,7 @@ editable eligibility rules in natural language, continuously re-applied across w
 data, with every match traceable to the rule that produced it. Not an autonomous
 decision-maker — nothing writes to an EC record without explicit human approval.
 
-Design background and the full planning conversation: [docs/planning_transcript.md](docs/planning_transcript.md).
+Design background and the full planning conversation: [docs/design_thinking.md](docs/design_thinking.md).
 
 ## Problem framing
 
