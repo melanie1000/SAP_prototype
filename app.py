@@ -20,6 +20,8 @@ TODAY = date(2026, 7, 9)  # fixed reference date the mock dataset's dates are ca
 NO_TIMING_CONSTRAINT = "2099-12-31"  # used when the rule doesn't mention an availability window
 EMPTY_FILTER = {"required_skills": [], "available_within_days": None, "exclude_if": None, "unless": None}
 RULE_TEXT_KEY = "rule_text_input"  # shared key: lets us read the live rule text before the text_area widget renders
+HEADCOUNT_KEY = "headcount_input"  # shared key: lets us read the live headcount before the number_input widget renders
+DEFAULT_HEADCOUNT = 10  # P001's mock headcount_needed; the number_input below lets a planner override it live
 
 
 @st.cache_data(show_spinner="Interpreting rule...")
@@ -55,6 +57,9 @@ available_employees = [e for e in employees if not e.redeployment_status]
 # the very first default.
 rule_text = st.session_state.get(RULE_TEXT_KEY, get_active_rule(RULE_DB) or "")
 
+# Same pre-read pattern for the headcount number_input below, so the banner reflects it too.
+headcount_needed = st.session_state.get(HEADCOUNT_KEY, DEFAULT_HEADCOUNT)
+
 # (level, message) to display near the rule box once it's rendered, rather than up here.
 rule_interpretation_message = None
 
@@ -86,11 +91,12 @@ rule_target_start_date = (
     else NO_TIMING_CONSTRAINT
 )
 
-# Skill/timing criteria applied below come entirely from the rule you typed — the position
-# itself only contributes its role title and headcount, not a hidden skill/date requirement.
+# Skill/timing criteria and headcount come entirely from what's typed/set above — the
+# position itself only contributes its role title, not a hidden skill/date/headcount default.
 position = positions["P001"].model_copy(update={
     "required_skills": rule_required_skills,
     "target_start_date": rule_target_start_date,
+    "headcount_needed": headcount_needed,
 })
 eligible_pool = [e for e in available_employees if e.employee_id not in excluded_by_rule]
 ranked = rank_candidates(eligible_pool, assignments, position)
@@ -180,6 +186,7 @@ with col_rule:
     if rule_interpretation_message:
         level, msg = rule_interpretation_message
         getattr(st, level)(msg)
+    st.number_input("Positions needed:", min_value=1, step=1, value=headcount_needed, key=HEADCOUNT_KEY)
 
 with col_approve:
     st.subheader("Approve candidate for re-deployment")
