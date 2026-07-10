@@ -159,26 +159,28 @@ with tab_matches:
         key="featured_employee_id",
     )
     if featured_id is not None:
+        featured_label = f"{id_to_name[featured_id]} ({featured_id})"
         featured_score = next((r for r in ranked if r.employee_id == featured_id), None)
         if featured_score is None:
-            st.info(f"{id_to_name[featured_id]} is excluded by the persisted rule "
+            st.info(f"{featured_label} is excluded by the persisted rule "
                     f"(see the exclusions listed below) or not currently in the redeployment pool.")
         elif featured_score.eligible:
-            st.success(explain_match(id_to_name[featured_id], featured_score.matched_skills, position.role_title, available=True))
+            st.success(explain_match(featured_label, featured_score.matched_skills, position.role_title, available=True))
         else:
-            st.error(explain_exclusion(id_to_name[featured_id], featured_score.reason))
+            st.error(explain_exclusion(featured_label, featured_score.reason))
 
     st.subheader("All candidates")
     for r in ranked:
         emp = next(e for e in employees if e.employee_id == r.employee_id)
+        emp_label = f"{emp.name} ({emp.employee_id})"
         if r.eligible:
-            st.success(explain_match(emp.name, r.matched_skills, position.role_title, available=r.eligible))
+            st.success(explain_match(emp_label, r.matched_skills, position.role_title, available=r.eligible))
         else:
-            st.error(explain_exclusion(emp.name, r.reason))
+            st.error(explain_exclusion(emp_label, r.reason))
 
     for emp_id, reason in excluded_by_rule.items():
         emp = next(e for e in employees if e.employee_id == emp_id)
-        st.error(explain_exclusion(emp.name, reason))
+        st.error(explain_exclusion(f"{emp.name} ({emp_id})", reason))
 
     st.subheader("Approve write-back")
     eligible_ids = [r.employee_id for r in ranked if r.eligible][:position.headcount_needed]
